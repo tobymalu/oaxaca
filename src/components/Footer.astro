@@ -17,7 +17,7 @@ const year = new Date().getFullYear();
         {
           NAV_LINKS.map((link) => (
             <li>
-              <a href={link.href} class="transition hover:text-primary">
+              <a href={link.href} class="transition hover:text-secondary">
                 {link.label}
               </a>
             </li>
@@ -32,7 +32,7 @@ const year = new Date().getFullYear();
         {
           PARTNER_LINKS.map((link) => (
             <li>
-              <a href={link.href} class="transition hover:text-primary" rel="noopener" target="_blank">
+              <a href={link.href} class="transition hover:text-secondary" rel="noopener" target="_blank">
                 {link.label}
               </a>
             </li>
@@ -45,21 +45,21 @@ const year = new Date().getFullYear();
           <ul class="mt-6 space-y-2 text-sm">
             {SITE.email && (
               <li>
-                <a href={`mailto:${SITE.email}`} class="transition hover:text-primary">
+                <a href={`mailto:${SITE.email}`} class="transition hover:text-secondary">
                   {SITE.email}
                 </a>
               </li>
             )}
             {SITE.phone.e164 && (
               <li>
-                <a href={`tel:${SITE.phone.e164}`} class="transition hover:text-primary">
+                <a href={`tel:${SITE.phone.e164}`} class="transition hover:text-secondary">
                   {SITE.phone.display}
                 </a>
               </li>
             )}
             {SITE.whatsapp.number && (
               <li>
-                <a href={whatsappUrl()} class="transition hover:text-primary" rel="noopener" target="_blank">
+                <a href={whatsappUrl()} class="transition hover:text-secondary" rel="noopener" target="_blank">
                   WhatsApp
                 </a>
               </li>

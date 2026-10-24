@@ -11,6 +11,10 @@
 export const SITE = {
   name: 'Visita Oaxaca',
   tagline: 'Tu guía para descubrir Oaxaca: cultura, gastronomía, mezcal y costa',
+  // <title> y meta description por defecto (Layout.astro) cuando la página no pasa los suyos.
+  defaultTitle: 'Visita Oaxaca | Experiencias, Tours y Cultura',
+  defaultDescription:
+    'Descubre la magia de Oaxaca. Reserva tours exclusivos, conoce nuestra gastronomía, historia y vive experiencias auténticas con expertos locales.',
   // Dominio real de producción — debe coincidir con `site` en astro.config.mjs
   url: 'https://visitaoaxaca.com.mx',
   // TODO: email de contacto
@@ -34,6 +38,19 @@ export const SITE = {
   },
   // TODO: ID real de Google Tag Manager (o PUBLIC_GTM_ID en el entorno)
   gtmId: '',
+} as const;
+
+/**
+ * Paleta de marca para usos fuera de CSS (meta theme-color, OG, etc.).
+ * Para estilos usar las clases de Tailwind — los tokens viven en
+ * src/styles/global.css y deben coincidir con estos valores.
+ */
+export const BRAND_COLORS = {
+  cempasuchil: '#F59E0B',
+  cochinilla: '#BE123C',
+  agave: '#4D7C5F',
+  barroNegro: '#1F2937',
+  cantera: '#F9FAFB',
 } as const;
 
 export const hasContact = Boolean(SITE.email || SITE.phone.e164 || SITE.whatsapp.number);

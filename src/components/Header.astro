@@ -18,8 +18,8 @@ const currentPath = Astro.url.pathname;
               <a
                 href={link.href}
                 class:list={[
-                  'transition hover:text-primary',
-                  currentPath === link.href ? 'text-primary' : 'text-foreground',
+                  'transition hover:text-secondary',
+                  currentPath === link.href ? 'text-secondary' : 'text-foreground',
                 ]}
                 aria-current={currentPath === link.href ? 'page' : undefined}
               >

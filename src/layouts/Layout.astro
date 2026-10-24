@@ -5,12 +5,13 @@ import Footer from '../components/Footer.astro';
 import CookieBanner from '../components/CookieBanner.astro';
 import GoogleTagManager from '../components/GoogleTagManager.astro';
 import GoogleTagManagerNoscript from '../components/GoogleTagManagerNoscript.astro';
-import { SITE } from '../lib/site';
+import { SITE, BRAND_COLORS } from '../lib/site';
 
 interface Props {
-  /** <title> y og:title — distinto del H1 editorial de la página. */
-  title: string;
-  description: string;
+  /** <title> y og:title — distinto del H1 editorial de la página. Default: SITE.defaultTitle. */
+  title?: string;
+  /** Default: SITE.defaultDescription. */
+  description?: string;
   /** Ruta absoluta opcional para forzar el canonical (ej. contenido duplicado/paginado). */
   canonicalPath?: string;
   noindex?: boolean;
@@ -19,8 +20,8 @@ interface Props {
 }
 
 const {
-  title,
-  description,
+  title = SITE.defaultTitle,
+  description = SITE.defaultDescription,
   canonicalPath,
   noindex = false,
   // TODO: reemplazar por una imagen OG real (1200×630) cuando haya fotografía.
@@ -43,7 +44,7 @@ const fullTitle = title.includes(SITE.name) ? title : `${title} | ${SITE.name}`;
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
-    <meta name="theme-color" content="#a4243b" />
+    <meta name="theme-color" content={BRAND_COLORS.cochinilla} />
 
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
@@ -76,8 +77,11 @@ const fullTitle = title.includes(SITE.name) ? title : `${title} | ${SITE.name}`;
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="generator" content={Astro.generator} />
   </head>
-  <body class="bg-background text-foreground">
+  <body class="min-h-screen bg-background text-foreground">
     <GoogleTagManagerNoscript />
+
+    <!-- Greca zapoteca sutil como fondo global (no afecta legibilidad) -->
+    <div class="bg-zapotec-pattern pointer-events-none fixed inset-0 -z-10" aria-hidden="true"></div>
 
     <a
       href="#content"

@@ -2,19 +2,17 @@
 @plugin '@tailwindcss/typography';
 
 /*
- * Paleta de marca — capa literal, inspirada en Oaxaca.
- * Cambiar el color de marca es editar estos valores; los componentes
+ * Paleta de marca — capa literal, elementos endémicos de Oaxaca.
+ * Debe coincidir con BRAND_COLORS en src/lib/site.ts. Los componentes
  * nunca deben referenciar estos tokens directamente, solo los alias
  * semánticos definidos abajo.
  */
 @theme {
-  --color-cal: #faf6ef; /* muros encalados */
-  --color-amate: #f1e8d8; /* papel amate */
-  --color-barro-negro: #1c1917; /* barro negro de San Bartolo Coyotepec */
-  --color-piedra: #6b625a;
-  --color-grana: #a4243b; /* grana cochinilla */
-  --color-cempasuchil: #e8a33d;
-  --color-cantera: #5e7d5a; /* cantera verde */
+  --color-oaxaca-cempasuchil: #f59e0b;
+  --color-oaxaca-cochinilla: #be123c;
+  --color-oaxaca-agave: #4d7c5f;
+  --color-oaxaca-barro: #1f2937;
+  --color-oaxaca-cantera: #f9fafb;
 
   --font-heading: 'Fraunces', ui-serif, Georgia, serif;
   --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
@@ -22,19 +20,31 @@
 
 /*
  * Alias semánticos por rol — esto es lo único que deben usar los componentes
- * (bg-background, text-foreground, text-muted, bg-primary, text-accent, etc.)
+ * (bg-background, text-foreground, text-muted, bg-primary, text-secondary, etc.)
+ *
+ * Contraste: el cempasúchil solo sirve como FONDO de CTA (con texto barro
+ * encima, ~8:1). Sobre fondo cantera no pasa AA como texto — para texto de
+ * acento (links, eyebrows, hover) usar `text-secondary` (cochinilla).
  */
 @theme {
-  --color-background: var(--color-cal);
-  --color-surface: var(--color-amate);
-  --color-foreground: var(--color-barro-negro);
-  --color-muted: var(--color-piedra);
-  --color-primary: var(--color-grana);
-  --color-primary-foreground: var(--color-cal);
-  --color-secondary: var(--color-cempasuchil);
-  --color-secondary-foreground: var(--color-barro-negro);
-  --color-accent: var(--color-cantera);
-  --color-accent-foreground: var(--color-cal);
+  --color-background: var(--color-oaxaca-cantera);
+  --color-surface: color-mix(in srgb, var(--color-oaxaca-agave) 8%, var(--color-oaxaca-cantera));
+  --color-foreground: var(--color-oaxaca-barro);
+  --color-muted: #4b5563;
+  --color-primary: var(--color-oaxaca-cempasuchil);
+  --color-primary-foreground: var(--color-oaxaca-barro);
+  --color-secondary: var(--color-oaxaca-cochinilla);
+  --color-secondary-foreground: var(--color-oaxaca-cantera);
+  --color-accent: var(--color-oaxaca-agave);
+  --color-accent-foreground: var(--color-oaxaca-cantera);
+}
+
+/*
+ * Greca zapoteca (Mitla) en SVG inline — sin peticiones extra ni imágenes
+ * pesadas. Opacidad 5% para no afectar la legibilidad.
+ */
+@utility bg-zapotec-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h22v12.5h-2zM0 20h2v20H0V20zm20 2h2v18h-2V22zm22-2v2H22v-2h20zm0-2V2H22v2h20v2H22v2h20v2H22v2h20v2H22v2h20z' fill='%23F59E0B' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
 }
 
 @layer base {
@@ -46,6 +56,8 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   h1,
