@@ -1,0 +1,79 @@
+---
+import { Image } from 'astro:assets';
+import ImagePlaceholder from './ImagePlaceholder.astro';
+import { precioDesde, formatPrecio } from '../lib/precios';
+import type { TourDestacado } from '../data/home';
+
+interface Props {
+  tour: TourDestacado;
+}
+
+const { tour } = Astro.props;
+const desde = precioDesde(tour.precios);
+---
+
+<article class="flex h-full flex-col overflow-hidden rounded-2xl border border-foreground/10 bg-background shadow-sm transition hover:shadow-lg">
+  <div class="relative aspect-[4/3] overflow-hidden">
+    {
+      tour.imagen ? (
+        <Image
+          src={tour.imagen.src}
+          alt={tour.imagen.alt}
+          widths={[320, 480, 640]}
+          sizes="(min-width: 1024px) 25vw, (min-width: 640px) 45vw, 80vw"
+          format="webp"
+          class="absolute inset-0 h-full w-full object-cover"
+        />
+      ) : (
+        <ImagePlaceholder label={tour.name} class="absolute inset-0" />
+      )
+    }
+    {
+      tour.badge && (
+        <span class="absolute top-3 left-3 rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground shadow">
+          {tour.badge}
+        </span>
+      )
+    }
+  </div>
+
+  <div class="flex flex-1 flex-col p-5">
+    <p class="text-xs font-medium uppercase tracking-wide text-muted">{tour.region}</p>
+    <h3 class="mt-1 font-heading text-lg font-semibold leading-snug">{tour.name}</h3>
+
+    {
+      tour.rating ? (
+        <p class="mt-2 flex items-center gap-1 text-sm">
+          <svg class="size-4 text-primary" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path d="M10 1.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.5 7.7l5.9-.9z" />
+          </svg>
+          <span class="font-semibold">{tour.rating.valor.toFixed(1)}</span>
+          <span class="text-muted">({tour.rating.resenas} reseñas)</span>
+        </p>
+      ) : (
+        <p class="mt-2 text-sm text-muted">Calificación: [DATO FALTANTE]</p>
+      )
+    }
+
+    <div class="mt-auto flex items-end justify-between gap-3 pt-5">
+      <p class="text-sm text-muted">
+        Desde
+        <span class="block text-lg font-semibold text-foreground">
+          {desde ? formatPrecio(desde) : '[DATO FALTANTE]'}
+        </span>
+      </p>
+      {
+        tour.href ? (
+          <a
+            href={tour.href}
+            class="rounded-full border border-foreground/20 px-4 py-2 text-sm font-medium transition hover:border-accent hover:text-accent"
+          >
+            Ver detalles<span class="sr-only"> de {tour.name}</span>
+          </a>
+        ) : (
+          <span class="text-sm font-medium text-muted">Próximamente</span>
+        )
+      }
+    </div>
+  </div>
+</article>

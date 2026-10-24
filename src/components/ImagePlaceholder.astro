@@ -1,0 +1,21 @@
+---
+// Relleno de marca para tarjetas sin foto todavía. Mantiene el layout
+// y deja visible qué falta, sin descargar ninguna imagen.
+interface Props {
+  label: string;
+  class?: string;
+}
+
+const { label, class: className } = Astro.props;
+---
+
+<div
+  class:list={['flex items-center justify-center bg-linear-to-br from-muted to-foreground', className]}
+  role="img"
+  aria-label={`Foto pendiente: ${label}`}
+>
+  <div class="bg-zapotec-pattern absolute inset-0 opacity-100" aria-hidden="true"></div>
+  <span class="relative px-4 text-center text-xs font-medium uppercase tracking-widest text-background/70">
+    [DATO FALTANTE] Foto
+  </span>
+</div>

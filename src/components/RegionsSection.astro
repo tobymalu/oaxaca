@@ -1,0 +1,49 @@
+---
+import { Image } from 'astro:assets';
+import ImagePlaceholder from './ImagePlaceholder.astro';
+import { REGIONES } from '../data/home';
+---
+
+<section id="regiones" aria-labelledby="regiones-titulo" class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+  <p class="text-sm font-semibold uppercase tracking-widest text-accent">Destinos</p>
+  <h2 id="regiones-titulo" class="mt-2 text-3xl font-semibold sm:text-4xl">Explora las Regiones de Oaxaca</h2>
+
+  <ul class="mt-10 grid gap-6 md:grid-cols-3">
+    {
+      REGIONES.map((region) => {
+        const Tag = region.href ? 'a' : 'article';
+        return (
+          <li>
+            <Tag
+              {...(region.href && { href: region.href })}
+              class="group relative isolate flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-2xl text-background"
+            >
+              {region.imagen ? (
+                <Image
+                  src={region.imagen.src}
+                  alt={region.imagen.alt}
+                  widths={[400, 640, 900]}
+                  sizes="(min-width: 768px) 33vw, 100vw"
+                  format="webp"
+                  class="absolute inset-0 -z-10 h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                />
+              ) : (
+                <ImagePlaceholder label={region.name} class="absolute inset-0 -z-10" />
+              )}
+              <div class="absolute inset-0 -z-10 bg-linear-to-t from-foreground/90 via-foreground/30 to-transparent" aria-hidden="true" />
+              <div class="p-6">
+                <h3 class="text-2xl font-semibold">{region.name}</h3>
+                <p class="mt-2 text-sm text-background/85">{region.descripcion}</p>
+                {!region.href && (
+                  <span class="mt-4 inline-block rounded-full bg-background/15 px-3 py-1 text-xs font-medium backdrop-blur">
+                    Guía próximamente
+                  </span>
+                )}
+              </div>
+            </Tag>
+          </li>
+        );
+      })
+    }
+  </ul>
+</section>

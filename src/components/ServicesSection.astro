@@ -1,0 +1,73 @@
+---
+import { Image } from 'astro:assets';
+import { planTripHref } from '../lib/site';
+import santoDomingo from '../assets/images/santo-domingo-atardecer-oaxaca.jpg';
+
+const SERVICIOS = [
+  {
+    titulo: 'Traslado privado aeropuerto–hotel',
+    texto: 'Recepción en el aeropuerto de Oaxaca o de la costa y traslado directo a tu hospedaje.',
+  },
+  {
+    titulo: 'Bodas de destino',
+    texto: 'Planeación de bodas en templos, haciendas y playas de Oaxaca, de la sede al último detalle.',
+  },
+  {
+    titulo: 'Viajes a la medida',
+    texto: 'Itinerarios privados diseñados según tus fechas, intereses y ritmo de viaje.',
+  },
+];
+
+const cotizarHref = planTripHref('Hola, me gustaría cotizar un servicio con Visita Oaxaca.');
+const cotizarExternal = cotizarHref.startsWith('http');
+---
+
+<section id="servicios" aria-labelledby="servicios-titulo" class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+  <div class="grid items-center gap-12 lg:grid-cols-12">
+    <div class="relative lg:col-span-5">
+      <Image
+        src={santoDomingo}
+        alt="Fachada del templo de Santo Domingo en Oaxaca, sede tradicional de bodas"
+        widths={[480, 720, 960]}
+        sizes="(min-width: 1024px) 40vw, 100vw"
+        format="webp"
+        class="aspect-[4/5] w-full rounded-2xl object-cover object-[30%_70%] shadow-xl"
+      />
+      <div class="absolute -right-4 -bottom-4 -z-10 h-full w-full rounded-2xl bg-primary/30" aria-hidden="true"></div>
+    </div>
+
+    <div class="lg:col-span-7">
+      <p class="text-sm font-semibold uppercase tracking-widest text-accent">Servicios premium</p>
+      <h2 id="servicios-titulo" class="mt-2 text-3xl font-semibold sm:text-4xl">
+        Tu viaje resuelto, de principio a fin
+      </h2>
+      <p class="mt-4 text-lg text-muted">
+        Para viajeros que quieren vivir Oaxaca sin preocuparse por la logística.
+      </p>
+
+      <ul class="mt-8 space-y-6">
+        {
+          SERVICIOS.map((s) => (
+            <li class="flex gap-4">
+              <svg class="mt-1 size-6 shrink-0 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 12.5l4.5 4.5L19 7" />
+              </svg>
+              <div>
+                <h3 class="font-semibold">{s.titulo}</h3>
+                <p class="mt-1 text-muted">{s.texto}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+
+      <a
+        href={cotizarHref}
+        class="mt-10 inline-block rounded-full bg-primary px-8 py-3.5 font-semibold text-primary-foreground shadow-sm transition hover:brightness-95"
+        {...cotizarExternal && { target: '_blank', rel: 'noopener' }}
+      >
+        Solicitar cotización
+      </a>
+    </div>
+  </div>
+</section>

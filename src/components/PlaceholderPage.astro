@@ -1,0 +1,40 @@
+---
+// Contenido de rutas que ya están enlazadas pero aún no tienen contenido
+// real. Las páginas que lo usan deben ir con `noindex`.
+import { SITE, whatsappUrl } from '../lib/site';
+
+interface Props {
+  eyebrow: string;
+  heading: string;
+  faltante: string;
+}
+
+const { eyebrow, heading, faltante } = Astro.props;
+---
+
+<section class="mx-auto max-w-2xl px-4 py-32 text-center sm:px-6">
+  <p class="text-sm font-semibold uppercase tracking-widest text-accent">{eyebrow}</p>
+  <h1 class="mt-4 text-4xl font-semibold sm:text-5xl">{heading}</h1>
+  <p class="mt-6 text-muted"><slot /></p>
+  <p class="mt-4 text-sm text-muted">[DATO FALTANTE]: {faltante}</p>
+  <div class="mt-8 flex flex-wrap justify-center gap-3">
+    <a
+      href="/"
+      class="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition hover:brightness-95"
+    >
+      Volver al inicio
+    </a>
+    {
+      SITE.whatsapp.number && (
+        <a
+          href={whatsappUrl()}
+          target="_blank"
+          rel="noopener"
+          class="rounded-full border border-foreground/20 px-6 py-3 text-sm font-semibold transition hover:border-accent hover:text-accent"
+        >
+          Escríbenos por WhatsApp
+        </a>
+      )
+    }
+  </div>
+</section>

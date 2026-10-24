@@ -1,28 +1,36 @@
 ---
-import { SITE, NAV_LINKS } from '../lib/site';
+import { SITE, NAV_LINKS, planTripHref } from '../lib/site';
 
-const currentPath = Astro.url.pathname;
+interface Props {
+  /** Transparente sobre un hero a pantalla completa y sólido al hacer scroll (solo Home). */
+  transparent?: boolean;
+}
+
+const { transparent = false } = Astro.props;
+const ctaHref = planTripHref();
+const ctaExternal = ctaHref.startsWith('http');
 ---
 
-<header class="sticky top-0 z-40 border-b border-muted/15 bg-background/90 backdrop-blur">
-  <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-    <a href="/" class="font-heading text-xl font-semibold tracking-tight text-foreground">
+<header
+  class:list={[
+    'top-0 z-40 w-full',
+    transparent
+      ? 'header-overlay fixed inset-x-0'
+      : 'sticky border-b border-foreground/10 bg-background/95 text-foreground backdrop-blur',
+  ]}
+>
+  <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
+    <!-- [DATO FALTANTE]: logo de marca. Mientras tanto, wordmark tipográfico. -->
+    <a href="/" class="font-heading text-xl font-semibold tracking-tight">
       {SITE.name}
     </a>
 
-    <nav aria-label="Principal">
-      <ul class="flex items-center gap-6 text-sm font-medium">
+    <nav aria-label="Principal" class="hidden md:block">
+      <ul class="flex items-center gap-8 text-sm font-medium">
         {
           NAV_LINKS.map((link) => (
             <li>
-              <a
-                href={link.href}
-                class:list={[
-                  'transition hover:text-secondary',
-                  currentPath === link.href ? 'text-secondary' : 'text-foreground',
-                ]}
-                aria-current={currentPath === link.href ? 'page' : undefined}
-              >
+              <a href={link.href} class="underline-offset-8 transition hover:underline">
                 {link.label}
               </a>
             </li>
@@ -30,5 +38,55 @@ const currentPath = Astro.url.pathname;
         }
       </ul>
     </nav>
+
+    <div class="flex items-center gap-3">
+      <a
+        href={ctaHref}
+        class="hidden rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition hover:brightness-95 sm:inline-block"
+        {...ctaExternal && { target: '_blank', rel: 'noopener' }}
+      >
+        Planear viaje
+      </a>
+
+      <!-- Menú móvil sin JS: <details> nativo -->
+      <details class="group relative md:hidden">
+        <summary
+          class="flex size-10 cursor-pointer list-none items-center justify-center rounded-full [&::-webkit-details-marker]:hidden"
+          aria-label="Abrir menú"
+        >
+          <svg class="size-6 group-open:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"></path>
+          </svg>
+          <svg class="hidden size-6 group-open:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" d="M6 6l12 12M18 6L6 18"></path>
+          </svg>
+        </summary>
+        <nav
+          aria-label="Principal móvil"
+          class="absolute right-0 mt-2 w-56 rounded-xl border border-foreground/10 bg-background p-2 text-foreground shadow-xl"
+        >
+          <ul class="text-sm font-medium">
+            {
+              NAV_LINKS.map((link) => (
+                <li>
+                  <a href={link.href} class="block rounded-lg px-3 py-2.5 hover:bg-surface">
+                    {link.label}
+                  </a>
+                </li>
+              ))
+            }
+            <li class="mt-1 border-t border-foreground/10 pt-2">
+              <a
+                href={ctaHref}
+                class="block rounded-lg bg-primary px-3 py-2.5 text-center font-semibold text-primary-foreground"
+                {...ctaExternal && { target: '_blank', rel: 'noopener' }}
+              >
+                Planear viaje
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </details>
+    </div>
   </div>
 </header>

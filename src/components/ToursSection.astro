@@ -1,0 +1,27 @@
+---
+import TourCard from './TourCard.astro';
+import { TOURS_DESTACADOS } from '../data/home';
+---
+
+<section id="experiencias" aria-labelledby="experiencias-titulo" class="bg-surface py-20">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <p class="text-sm font-semibold uppercase tracking-widest text-accent">Tours</p>
+    <h2 id="experiencias-titulo" class="mt-2 text-3xl font-semibold sm:text-4xl">Experiencias Inolvidables</h2>
+    <p class="mt-3 max-w-2xl text-muted">Precios finales y transparentes: lo que ves es lo que pagas, sin costos ocultos.</p>
+  </div>
+
+  <!-- Carrusel con scroll-snap en móvil/tablet, grid de 4 columnas en desktop -->
+  <ul
+    class="mx-auto mt-10 flex max-w-7xl snap-x snap-mandatory gap-5 overflow-x-auto scroll-px-4 px-4 pb-4 sm:scroll-px-6 sm:px-6 lg:grid lg:grid-cols-4 lg:overflow-visible lg:px-8"
+    tabindex="0"
+    aria-label="Experiencias destacadas"
+  >
+    {
+      TOURS_DESTACADOS.map((tour) => (
+        <li class="w-[80%] shrink-0 snap-start sm:w-[45%] lg:w-auto">
+          <TourCard tour={tour} />
+        </li>
+      ))
+    }
+  </ul>
+</section>

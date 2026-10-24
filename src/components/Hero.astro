@@ -1,0 +1,35 @@
+---
+import { Image } from 'astro:assets';
+import SearchWidget from './SearchWidget.astro';
+import heroImg from '../assets/images/santo-domingo-atardecer-oaxaca.jpg';
+---
+
+<section class="relative isolate flex min-h-[min(100svh,56rem)] items-center overflow-hidden">
+  <!-- LCP: carga inmediata y prioridad alta; Astro la sirve en WebP -->
+  <Image
+    src={heroImg}
+    alt="Templo de Santo Domingo de Guzmán al atardecer, con un framboyán en flor en primer plano"
+    widths={[640, 960, 1280, 1650]}
+    sizes="100vw"
+    format="webp"
+    quality={70}
+    loading="eager"
+    fetchpriority="high"
+    class="absolute inset-0 -z-10 h-full w-full object-cover object-[50%_60%]"
+  />
+  <div class="absolute inset-0 -z-10 bg-foreground/50" aria-hidden="true"></div>
+
+  <div class="mx-auto flex w-full max-w-7xl flex-col items-center px-4 pt-28 pb-16 text-center sm:px-6 lg:px-8">
+    <p class="text-sm font-semibold uppercase tracking-[0.2em] text-primary">Oaxaca, México</p>
+    <h1 class="mt-4 max-w-4xl text-4xl font-semibold leading-tight text-background sm:text-5xl lg:text-6xl">
+      Descubre el Alma de México: Experiencias Auténticas en Oaxaca
+    </h1>
+    <p class="mt-5 max-w-2xl text-lg text-background/90">
+      Tours, hospedaje y traslados en los Valles Centrales, la Costa y la Sierra Norte, con expertos locales.
+    </p>
+
+    <div class="mt-10 flex w-full justify-center">
+      <SearchWidget />
+    </div>
+  </div>
+</section>
