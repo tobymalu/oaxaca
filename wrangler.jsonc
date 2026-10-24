@@ -2,7 +2,6 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "visitaoaxaca",
   "compatibility_date": "2026-10-24",
-  "assets": {
-    "directory": "./dist"
-  }
+  // Sitio 100% estático: sin bindings de Images/KV ni adapter.
+  "pages_build_output_dir": "./dist"
 }

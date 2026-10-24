@@ -1,0 +1,2 @@
+# Redirects 301 de Cloudflare Pages (se resuelven en el edge, antes de Astro).
+# Formato: /ruta-vieja  /ruta-nueva  301
