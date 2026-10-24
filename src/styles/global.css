@@ -1,0 +1,62 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+/*
+ * Paleta de marca — capa literal, inspirada en Oaxaca.
+ * Cambiar el color de marca es editar estos valores; los componentes
+ * nunca deben referenciar estos tokens directamente, solo los alias
+ * semánticos definidos abajo.
+ */
+@theme {
+  --color-cal: #faf6ef; /* muros encalados */
+  --color-amate: #f1e8d8; /* papel amate */
+  --color-barro-negro: #1c1917; /* barro negro de San Bartolo Coyotepec */
+  --color-piedra: #6b625a;
+  --color-grana: #a4243b; /* grana cochinilla */
+  --color-cempasuchil: #e8a33d;
+  --color-cantera: #5e7d5a; /* cantera verde */
+
+  --font-heading: 'Fraunces', ui-serif, Georgia, serif;
+  --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+/*
+ * Alias semánticos por rol — esto es lo único que deben usar los componentes
+ * (bg-background, text-foreground, text-muted, bg-primary, text-accent, etc.)
+ */
+@theme {
+  --color-background: var(--color-cal);
+  --color-surface: var(--color-amate);
+  --color-foreground: var(--color-barro-negro);
+  --color-muted: var(--color-piedra);
+  --color-primary: var(--color-grana);
+  --color-primary-foreground: var(--color-cal);
+  --color-secondary: var(--color-cempasuchil);
+  --color-secondary-foreground: var(--color-barro-negro);
+  --color-accent: var(--color-cantera);
+  --color-accent-foreground: var(--color-cal);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-body);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-heading);
+  }
+
+  ::selection {
+    background-color: var(--color-primary);
+    color: var(--color-primary-foreground);
+  }
+}
