@@ -4,8 +4,8 @@
  * hardcodear estos valores en un componente individual.
  *
  * ⚠️ PENDIENTE: todavía no hay método de contacto. Los campos vacíos
- * (email, teléfono, WhatsApp, redes, GTM) no se renderizan en ningún
- * componente hasta que se llenen aquí.
+ * (email, teléfono, WhatsApp, redes, GTM, newsletter) no se renderizan
+ * en ningún componente hasta que se llenen aquí.
  */
 
 export const SITE = {
@@ -38,6 +38,9 @@ export const SITE = {
   },
   // TODO: ID real de Google Tag Manager (o PUBLIC_GTM_ID en el entorno)
   gtmId: '',
+  // TODO: endpoint del proveedor de newsletter (Formspree, Brevo, etc.).
+  // Mientras esté vacío el formulario del footer se muestra deshabilitado.
+  newsletterEndpoint: '',
 } as const;
 
 /**
@@ -59,13 +62,38 @@ export function whatsappUrl(message: string = SITE.whatsapp.defaultMessage): str
   return `https://wa.me/${SITE.whatsapp.number}?text=${encodeURIComponent(message)}`;
 }
 
+/**
+ * Destino de los CTA "Planear viaje" / "Cotizar": WhatsApp cuando exista
+ * el número; mientras tanto, el widget de búsqueda del Home.
+ */
+export function planTripHref(message?: string): string {
+  return SITE.whatsapp.number ? whatsappUrl(message) : '/#planear';
+}
+
 export type NavLink = {
   href: string;
   label: string;
 };
 
-// Solo rutas que ya existen — agregar cada link cuando su página esté lista.
-export const NAV_LINKS: NavLink[] = [{ href: '/', label: 'Inicio' }];
+// Mientras no existan las páginas de cada sección, apuntan a su bloque en el Home.
+export const NAV_LINKS: NavLink[] = [
+  { href: '/#regiones', label: 'Destinos' },
+  { href: '/#experiencias', label: 'Experiencias' },
+  { href: '/#guia', label: 'Gastronomía' },
+  { href: '/#servicios', label: 'Servicios' },
+];
+
+export const POPULAR_LINKS: NavLink[] = [
+  { href: '/#regiones', label: 'Regiones de Oaxaca' },
+  { href: '/#experiencias', label: 'Tours y experiencias' },
+  { href: '/#servicios', label: 'Bodas de destino' },
+  { href: '/#guia', label: 'Guía local' },
+];
+
+export const LEGAL_LINKS: NavLink[] = [
+  { href: '/aviso-de-privacidad', label: 'Aviso de privacidad' },
+  { href: '/politicas-de-cancelacion', label: 'Políticas de cancelación' },
+];
 
 export type PartnerLink = {
   href: string;

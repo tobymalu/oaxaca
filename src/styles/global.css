@@ -20,22 +20,22 @@
 
 /*
  * Alias semánticos por rol — esto es lo único que deben usar los componentes
- * (bg-background, text-foreground, text-muted, bg-primary, text-secondary, etc.)
+ * (bg-background, text-foreground, text-muted, bg-primary, text-accent, etc.)
  *
- * Contraste: el cempasúchil solo sirve como FONDO de CTA (con texto barro
- * encima, ~8:1). Sobre fondo cantera no pasa AA como texto — para texto de
- * acento (links, eyebrows, hover) usar `text-secondary` (cochinilla).
+ * Contraste:
+ * - primary (cempasúchil) solo como FONDO de CTA con texto barro encima
+ *   (~8:1), o como texto sobre fondos oscuros. Sobre cantera no pasa AA.
+ * - accent (cochinilla) es el color de texto de acento sobre fondos claros (~6:1).
+ * - muted es agave oscurecido con barro para pasar AA también sobre `surface`.
  */
 @theme {
   --color-background: var(--color-oaxaca-cantera);
-  --color-surface: color-mix(in srgb, var(--color-oaxaca-agave) 8%, var(--color-oaxaca-cantera));
+  --color-surface: color-mix(in srgb, var(--color-oaxaca-agave) 6%, var(--color-oaxaca-cantera));
   --color-foreground: var(--color-oaxaca-barro);
-  --color-muted: #4b5563;
+  --color-muted: color-mix(in srgb, var(--color-oaxaca-agave) 80%, var(--color-oaxaca-barro));
   --color-primary: var(--color-oaxaca-cempasuchil);
   --color-primary-foreground: var(--color-oaxaca-barro);
-  --color-secondary: var(--color-oaxaca-cochinilla);
-  --color-secondary-foreground: var(--color-oaxaca-cantera);
-  --color-accent: var(--color-oaxaca-agave);
+  --color-accent: var(--color-oaxaca-cochinilla);
   --color-accent-foreground: var(--color-oaxaca-cantera);
 }
 
@@ -47,9 +47,53 @@
   background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h22v12.5h-2zM0 20h2v20H0V20zm20 2h2v18h-2V22zm22-2v2H22v-2h20zm0-2V2H22v2h20v2H22v2h20v2H22v2h20v2H22v2h20z' fill='%23F59E0B' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
 }
 
+/*
+ * Header transparente sobre el hero que pasa a sólido al hacer scroll,
+ * con scroll-driven animations (cero JS). Navegadores sin soporte se
+ * quedan con la versión sólida desde el inicio.
+ */
+@keyframes header-solid {
+  to {
+    background-color: color-mix(in srgb, var(--color-background) 95%, transparent);
+    border-color: color-mix(in srgb, var(--color-foreground) 10%, transparent);
+    color: var(--color-foreground);
+    backdrop-filter: blur(12px);
+  }
+}
+
+@utility header-overlay {
+  background-color: color-mix(in srgb, var(--color-background) 95%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-foreground) 10%, transparent);
+  color: var(--color-foreground);
+  backdrop-filter: blur(12px);
+
+  @supports (animation-timeline: scroll()) {
+    background-color: transparent;
+    border-color: transparent;
+    color: var(--color-background);
+    backdrop-filter: none;
+    animation-name: header-solid;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-range: 0 160px;
+  }
+}
+
+/*
+ * animation-timeline va en su propia regla: si comparte bloque con las
+ * otras longhands, el minificador las fusiona en el shorthand `animation`,
+ * donde los navegadores no aceptan un timeline e invalidan la declaración.
+ */
+@supports (animation-timeline: scroll()) {
+  header.header-overlay {
+    animation-timeline: scroll(root);
+  }
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
   }
 
   body {
