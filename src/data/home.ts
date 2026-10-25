@@ -4,6 +4,11 @@ import mitla from '../assets/images/mitla-grecas-zapotecas.jpeg';
 import costa from '../assets/images/costa-oaxaquena-atardecer.png';
 import hierveElAgua from '../assets/images/hierve-el-agua-cascada-petrificada.jpg';
 import tlayuda from '../assets/images/tlayuda-oaxaquena-brasas.jpg';
+import sierraNorte from '../assets/images/sierra-norte-puente-colgante-niebla.jpg';
+import rutaMezcal from '../assets/images/ruta-del-mezcal-campo-de-agave.jpg';
+import monteAlban from '../assets/images/monte-alban-vista-aerea.jpg';
+import guelaguetza from '../assets/images/guelaguetza-calenda-china-oaxaquena.jpeg';
+import palenque from '../assets/images/palenque-mezcal-tahona.jpg';
 
 /**
  * Contenido de las secciones del Home. Cuando existan las colecciones
@@ -41,7 +46,10 @@ export const REGIONES: Region[] = [
   {
     name: 'Sierra Norte',
     descripcion: 'Pueblos Mancomunados, bosques de niebla y ecoturismo comunitario.',
-    // [DATO FALTANTE]: foto de la Sierra Norte
+    imagen: {
+      src: sierraNorte,
+      alt: 'Puente colgante entre pinos cubiertos de niebla en la Sierra Norte de Oaxaca',
+    },
   },
 ];
 
@@ -72,6 +80,10 @@ export const TOURS_DESTACADOS: TourDestacado[] = [
     name: 'Ruta del Mezcal Privada',
     region: 'Valles Centrales',
     badge: 'Privado',
+    imagen: {
+      src: rutaMezcal,
+      alt: 'Campo de agave espadín al atardecer con los cerros de los Valles Centrales al fondo',
+    },
     rating: null,
     precios: [], // [DATO FALTANTE]
   },
@@ -88,6 +100,10 @@ export const TOURS_DESTACADOS: TourDestacado[] = [
   {
     name: 'Zona arqueológica de Monte Albán',
     region: 'Valles Centrales',
+    imagen: {
+      src: monteAlban,
+      alt: 'Vista aérea de la Gran Plaza de Monte Albán sobre la montaña, con la ciudad de Oaxaca al fondo',
+    },
     rating: null,
     precios: [], // [DATO FALTANTE]
   },
@@ -106,11 +122,19 @@ export const ARTICULOS_GUIA: ArticuloGuia[] = [
     titulo: 'Mejores fechas para ir a la Guelaguetza',
     categoria: 'Cultura',
     extracto: 'Cuándo se celebra, cómo conseguir boletos y qué esperar de la fiesta más grande de Oaxaca.',
+    imagen: {
+      src: guelaguetza,
+      alt: 'China oaxaqueña bailando con canasta de flores en una calenda nocturna con fuegos artificiales',
+    },
   },
   {
     titulo: 'Top 5 palenques de mezcal',
     categoria: 'Mezcal',
     extracto: 'Dónde ver el proceso artesanal completo, del horno de tierra al alambique.',
+    imagen: {
+      src: palenque,
+      alt: 'Maestros mezcaleros moliendo agave cocido con tahona de piedra tirada por un buey',
+    },
   },
   {
     titulo: 'Qué comer en el Mercado 20 de Noviembre',
