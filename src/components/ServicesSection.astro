@@ -1,23 +1,14 @@
 ---
 import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
 import { planTripHref } from '../lib/site';
 import santoDomingo from '../assets/images/santo-domingo-atardecer-oaxaca.jpg';
 
-const SERVICIOS = [
-  {
-    titulo: 'Traslado privado aeropuerto–hotel',
-    texto: 'Recepción en el aeropuerto de Oaxaca o de la costa y traslado directo a tu hospedaje.',
-  },
-  {
-    titulo: 'Bodas de destino',
-    texto: 'Planeación de bodas en templos, haciendas y playas de Oaxaca, de la sede al último detalle.',
-  },
-  {
-    titulo: 'Viajes a la medida',
-    texto: 'Itinerarios privados diseñados según tus fechas, intereses y ritmo de viaje.',
-  },
-];
+interface Props {
+  servicios: CollectionEntry<'servicios'>[];
+}
 
+const { servicios } = Astro.props;
 const cotizarHref = planTripHref('Hola, me gustaría cotizar un servicio con Visita Oaxaca.');
 const cotizarExternal = cotizarHref.startsWith('http');
 ---
@@ -48,27 +39,32 @@ const cotizarExternal = cotizarHref.startsWith('http');
 
       <ul class="mt-8 space-y-6">
         {
-          SERVICIOS.map((s) => (
+          servicios.map((s) => (
             <li class="flex gap-4">
               <svg class="mt-1 size-6 shrink-0 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 12.5l4.5 4.5L19 7" />
               </svg>
               <div>
-                <h3 class="font-semibold">{s.titulo}</h3>
-                <p class="mt-1 text-muted">{s.texto}</p>
+                <h3 class="font-semibold">{s.data.nombre_corto}</h3>
+                <p class="mt-1 text-muted">{s.data.descripcion}</p>
               </div>
             </li>
           ))
         }
       </ul>
 
-      <a
-        href={cotizarHref}
-        class="mt-10 inline-block rounded-full bg-primary px-8 py-3.5 font-semibold text-primary-foreground shadow-sm transition hover:brightness-95"
-        {...cotizarExternal && { target: '_blank', rel: 'noopener' }}
-      >
-        Solicitar cotización
-      </a>
+      <div class="mt-10 flex flex-wrap items-center gap-6">
+        <a
+          href={cotizarHref}
+          class="inline-block rounded-full bg-primary px-8 py-3.5 font-semibold text-primary-foreground shadow-sm transition hover:brightness-95"
+          {...cotizarExternal && { target: '_blank', rel: 'noopener' }}
+        >
+          Solicitar cotización
+        </a>
+        <a href="/servicios" class="text-sm font-semibold text-accent underline-offset-4 hover:underline">
+          Ver todos los servicios <span aria-hidden="true">→</span>
+        </a>
+      </div>
     </div>
   </div>
 </section>

@@ -1,13 +1,27 @@
 ---
+import type { CollectionEntry } from 'astro:content';
 import TourCard from './TourCard.astro';
-import { TOURS_DESTACADOS } from '../data/home';
+import SectionHeader from './SectionHeader.astro';
+
+interface Props {
+  experiencias: CollectionEntry<'experiencias'>[];
+  /** id de destino → nombre corto, para la etiqueta de región de cada tarjeta. */
+  nombresDestino: Record<string, string>;
+}
+
+const { experiencias, nombresDestino } = Astro.props;
 ---
 
 <section id="experiencias" aria-labelledby="experiencias-titulo" class="bg-surface py-20">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-    <p class="text-sm font-semibold uppercase tracking-widest text-accent">Tours</p>
-    <h2 id="experiencias-titulo" class="mt-2 text-3xl font-semibold sm:text-4xl">Experiencias Inolvidables</h2>
-    <p class="mt-3 max-w-2xl text-muted">Precios finales y transparentes: lo que ves es lo que pagas, sin costos ocultos.</p>
+    <SectionHeader
+      id="experiencias-titulo"
+      eyebrow="Tours"
+      title="Experiencias Inolvidables"
+      intro="Precios finales y transparentes: lo que ves es lo que pagas, sin costos ocultos."
+      hubHref="/experiencias"
+      hubLabel="Ver todas las experiencias"
+    />
   </div>
 
   <!-- Carrusel con scroll-snap en móvil/tablet, grid de 4 columnas en desktop -->
@@ -17,9 +31,9 @@ import { TOURS_DESTACADOS } from '../data/home';
     aria-label="Experiencias destacadas"
   >
     {
-      TOURS_DESTACADOS.map((tour) => (
+      experiencias.map((experiencia) => (
         <li class="w-[80%] shrink-0 snap-start sm:w-[45%] lg:w-auto">
-          <TourCard tour={tour} />
+          <TourCard experiencia={experiencia} destinoNombre={nombresDestino[experiencia.data.destino.id] ?? ''} />
         </li>
       ))
     }

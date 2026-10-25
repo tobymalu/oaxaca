@@ -1,0 +1,43 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import CategoryHeader from '../../components/CategoryHeader.astro';
+import TourCard from '../../components/TourCard.astro';
+import EmptySilo from '../../components/EmptySilo.astro';
+import { getSilo } from '../../lib/colecciones';
+
+const [experiencias, destinos] = await Promise.all([getSilo('experiencias'), getSilo('destinos')]);
+const nombresDestino = Object.fromEntries(destinos.map((d) => [d.id, d.data.nombre_corto]));
+---
+
+<Layout
+  title="Tours y experiencias en Oaxaca: precios sin costos ocultos"
+  description="Tours y experiencias en Oaxaca: Hierve el Agua, Monte Albán, Ruta del Mezcal, tours gastronómicos y más. Precios claros y guías locales."
+>
+  <CategoryHeader
+    breadcrumb="Experiencias"
+    path="/experiencias"
+    eyebrow="Tours y experiencias"
+    h1="Experiencias y Tours en Oaxaca"
+    intro="Zonas arqueológicas, palenques de mezcal, mercados y maravillas naturales. Cada experiencia muestra su precio final: lo que ves es lo que pagas."
+  />
+
+  <section aria-label="Listado de experiencias" class="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
+    {
+      experiencias.length > 0 ? (
+        <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {experiencias.map((experiencia) => (
+            <li>
+              <TourCard
+                experiencia={experiencia}
+                destinoNombre={nombresDestino[experiencia.data.destino.id] ?? ''}
+                headingLevel="h2"
+              />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <EmptySilo />
+      )
+    }
+  </section>
+</Layout>

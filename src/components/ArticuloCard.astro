@@ -1,0 +1,46 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import ImagePlaceholder from './ImagePlaceholder.astro';
+
+interface Props {
+  articulo: CollectionEntry<'gastronomia'>;
+  href?: string;
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { articulo, href, headingLevel: Heading = 'h3' } = Astro.props;
+const { nombre_corto, descripcion, imagen_portada, categoria } = articulo.data;
+const Tag = href ? 'a' : 'article';
+---
+
+<Tag
+  {...(href && { href })}
+  class="group flex h-full flex-col overflow-hidden rounded-2xl border border-foreground/10 bg-background"
+>
+  <div class="relative aspect-[16/10] overflow-hidden">
+    {
+      imagen_portada ? (
+        <Image
+          src={imagen_portada.src}
+          alt={imagen_portada.alt}
+          width={800}
+          widths={[400, 640, 800]}
+          sizes="(min-width: 768px) 33vw, 100vw"
+          format="webp"
+          class="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105"
+        />
+      ) : (
+        <ImagePlaceholder label={nombre_corto} class="absolute inset-0" />
+      )
+    }
+  </div>
+  <div class="flex flex-1 flex-col p-6">
+    <p class="text-xs font-semibold uppercase tracking-wide text-accent">{categoria}</p>
+    <Heading class="mt-2 font-heading text-xl font-semibold leading-snug">{nombre_corto}</Heading>
+    <p class="mt-2 text-sm text-muted">{descripcion}</p>
+    <p class="mt-auto pt-4 text-sm font-medium text-muted">
+      {href ? 'Leer artículo →' : 'Próximamente'}
+    </p>
+  </div>
+</Tag>

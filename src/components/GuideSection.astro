@@ -1,51 +1,32 @@
 ---
-import { Image } from 'astro:assets';
-import ImagePlaceholder from './ImagePlaceholder.astro';
-import { ARTICULOS_GUIA } from '../data/home';
+import type { CollectionEntry } from 'astro:content';
+import ArticuloCard from './ArticuloCard.astro';
+import SectionHeader from './SectionHeader.astro';
+
+interface Props {
+  articulos: CollectionEntry<'gastronomia'>[];
+}
+
+const { articulos } = Astro.props;
 ---
 
 <section id="guia" aria-labelledby="guia-titulo" class="bg-surface py-20">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-    <p class="text-sm font-semibold uppercase tracking-widest text-accent">Cultura y gastronomía</p>
-    <h2 id="guia-titulo" class="mt-2 text-3xl font-semibold sm:text-4xl">Guía Local: Lo que debes saber</h2>
+    <SectionHeader
+      id="guia-titulo"
+      eyebrow="Gastronomía"
+      title="Guía Local: Lo que debes saber"
+      hubHref="/gastronomia"
+      hubLabel="Ver la guía gastronómica"
+    />
 
     <ul class="mt-10 grid gap-6 md:grid-cols-3">
       {
-        ARTICULOS_GUIA.map((articulo) => {
-          const Tag = articulo.href ? 'a' : 'article';
-          return (
-            <li>
-              <Tag
-                {...(articulo.href && { href: articulo.href })}
-                class="group flex h-full flex-col overflow-hidden rounded-2xl border border-foreground/10 bg-background"
-              >
-                <div class="relative aspect-[16/10] overflow-hidden">
-                  {articulo.imagen ? (
-                    <Image
-                      src={articulo.imagen.src}
-                      alt={articulo.imagen.alt}
-                      width={800}
-                      widths={[400, 640, 800]}
-                      sizes="(min-width: 768px) 33vw, 100vw"
-                      format="webp"
-                      class="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                    />
-                  ) : (
-                    <ImagePlaceholder label={articulo.titulo} class="absolute inset-0" />
-                  )}
-                </div>
-                <div class="flex flex-1 flex-col p-6">
-                  <p class="text-xs font-semibold uppercase tracking-wide text-accent">{articulo.categoria}</p>
-                  <h3 class="mt-2 font-heading text-xl font-semibold leading-snug">{articulo.titulo}</h3>
-                  <p class="mt-2 text-sm text-muted">{articulo.extracto}</p>
-                  <p class="mt-auto pt-4 text-sm font-medium text-muted">
-                    {articulo.href ? 'Leer artículo →' : 'Próximamente'}
-                  </p>
-                </div>
-              </Tag>
-            </li>
-          );
-        })
+        articulos.map((articulo) => (
+          <li>
+            <ArticuloCard articulo={articulo} />
+          </li>
+        ))
       }
     </ul>
   </div>

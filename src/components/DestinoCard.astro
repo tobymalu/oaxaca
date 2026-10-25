@@ -1,0 +1,49 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import ImagePlaceholder from './ImagePlaceholder.astro';
+
+interface Props {
+  destino: CollectionEntry<'destinos'>;
+  /** Sin href (aún no existe la página de detalle) se muestra "Guía próximamente". */
+  href?: string;
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { destino, href, headingLevel: Heading = 'h3' } = Astro.props;
+const { nombre_corto, descripcion, imagen_portada } = destino.data;
+const Tag = href ? 'a' : 'article';
+---
+
+<Tag
+  {...(href && { href })}
+  class="group relative isolate flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-2xl text-background"
+>
+  {
+    imagen_portada ? (
+      <Image
+        src={imagen_portada.src}
+        alt={imagen_portada.alt}
+        width={900}
+        widths={[400, 640, 900]}
+        sizes="(min-width: 768px) 33vw, 100vw"
+        format="webp"
+        class="absolute inset-0 -z-10 h-full w-full object-cover transition duration-500 group-hover:scale-105"
+      />
+    ) : (
+      <ImagePlaceholder label={nombre_corto} class="absolute inset-0 -z-10" />
+    )
+  }
+  <div class="absolute inset-0 -z-10 bg-linear-to-t from-foreground/90 via-foreground/30 to-transparent" aria-hidden="true"></div>
+  <div class="p-6">
+    <Heading class="font-heading text-2xl font-semibold">{nombre_corto}</Heading>
+    <p class="mt-2 text-sm text-background/85">{descripcion}</p>
+    {
+      !href && (
+        <span class="mt-4 inline-block rounded-full bg-background/15 px-3 py-1 text-xs font-medium backdrop-blur">
+          Guía próximamente
+        </span>
+      )
+    }
+  </div>
+</Tag>

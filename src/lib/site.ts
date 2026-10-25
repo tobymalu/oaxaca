@@ -75,19 +75,19 @@ export type NavLink = {
   label: string;
 };
 
-// Mientras no existan las páginas de cada sección, apuntan a su bloque en el Home.
+// Hubs de cada silo de contenido (src/content/*).
 export const NAV_LINKS: NavLink[] = [
-  { href: '/#regiones', label: 'Destinos' },
-  { href: '/#experiencias', label: 'Experiencias' },
-  { href: '/#guia', label: 'Gastronomía' },
-  { href: '/#servicios', label: 'Servicios' },
+  { href: '/destinos', label: 'Destinos' },
+  { href: '/experiencias', label: 'Experiencias' },
+  { href: '/gastronomia', label: 'Gastronomía' },
+  { href: '/servicios', label: 'Servicios' },
 ];
 
 export const POPULAR_LINKS: NavLink[] = [
-  { href: '/#regiones', label: 'Regiones de Oaxaca' },
-  { href: '/#experiencias', label: 'Tours y experiencias' },
-  { href: '/#servicios', label: 'Bodas de destino' },
-  { href: '/#guia', label: 'Guía local' },
+  { href: '/destinos', label: 'Regiones de Oaxaca' },
+  { href: '/experiencias', label: 'Tours y experiencias' },
+  { href: '/gastronomia', label: 'Guía gastronómica' },
+  { href: '/servicios', label: 'Traslados y bodas de destino' },
 ];
 
 export const LEGAL_LINKS: NavLink[] = [

@@ -1,0 +1,38 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import CategoryHeader from '../../components/CategoryHeader.astro';
+import DestinoCard from '../../components/DestinoCard.astro';
+import EmptySilo from '../../components/EmptySilo.astro';
+import { getSilo } from '../../lib/colecciones';
+
+const destinos = await getSilo('destinos');
+---
+
+<Layout
+  title="Destinos en Oaxaca: regiones y lugares que visitar"
+  description="Descubre los destinos de Oaxaca: Valles Centrales, Costa Oaxaqueña y Sierra Norte. Qué ver, qué hacer y cómo planear tu viaje por cada región."
+>
+  <CategoryHeader
+    breadcrumb="Destinos"
+    path="/destinos"
+    eyebrow="Destinos"
+    h1="Destinos de Oaxaca: Valles Centrales, Costa y Sierra Norte"
+    intro="De las zonas arqueológicas de los Valles Centrales a las playas del Pacífico y los bosques de niebla de la Sierra Norte. Elige la región que quieres explorar."
+  />
+
+  <section aria-label="Listado de destinos" class="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
+    {
+      destinos.length > 0 ? (
+        <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {destinos.map((destino) => (
+            <li>
+              <DestinoCard destino={destino} headingLevel="h2" />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <EmptySilo />
+      )
+    }
+  </section>
+</Layout>

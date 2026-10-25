@@ -1,0 +1,21 @@
+---
+// Cabecera de las páginas índice de cada silo: breadcrumbs + H1 + intro.
+import Breadcrumbs from './Breadcrumbs.astro';
+
+interface Props {
+  breadcrumb: string;
+  path: string;
+  eyebrow: string;
+  h1: string;
+  intro: string;
+}
+
+const { breadcrumb, path, eyebrow, h1, intro } = Astro.props;
+---
+
+<header class="mx-auto max-w-7xl px-4 pt-10 pb-12 sm:px-6 lg:px-8">
+  <Breadcrumbs items={[{ label: breadcrumb, href: path }]} />
+  <p class="mt-8 text-sm font-semibold uppercase tracking-widest text-accent">{eyebrow}</p>
+  <h1 class="mt-2 max-w-4xl text-4xl font-semibold leading-tight sm:text-5xl">{h1}</h1>
+  <p class="mt-5 max-w-3xl text-lg text-muted">{intro}</p>
+</header>

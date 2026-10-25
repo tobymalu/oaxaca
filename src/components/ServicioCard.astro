@@ -1,0 +1,60 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import ImagePlaceholder from './ImagePlaceholder.astro';
+import { precioDesde, formatPrecio } from '../lib/precios';
+
+interface Props {
+  servicio: CollectionEntry<'servicios'>;
+  href?: string;
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { servicio, href, headingLevel: Heading = 'h3' } = Astro.props;
+const { nombre_corto, descripcion, imagen_portada, precios } = servicio.data;
+const desde = precioDesde(precios);
+---
+
+<article class="flex h-full flex-col overflow-hidden rounded-2xl border border-foreground/10 bg-background shadow-sm">
+  <div class="relative aspect-[16/10] overflow-hidden">
+    {
+      imagen_portada ? (
+        <Image
+          src={imagen_portada.src}
+          alt={imagen_portada.alt}
+          width={800}
+          widths={[400, 640, 800]}
+          sizes="(min-width: 768px) 33vw, 100vw"
+          format="webp"
+          class="absolute inset-0 h-full w-full object-cover"
+        />
+      ) : (
+        <ImagePlaceholder label={nombre_corto} class="absolute inset-0" />
+      )
+    }
+  </div>
+  <div class="flex flex-1 flex-col p-6">
+    <Heading class="font-heading text-xl font-semibold leading-snug">{nombre_corto}</Heading>
+    <p class="mt-2 text-sm text-muted">{descripcion}</p>
+    <div class="mt-auto flex items-end justify-between gap-3 pt-5">
+      <p class="text-sm text-muted">
+        Desde
+        <span class="block text-lg font-semibold text-foreground">
+          {desde ? formatPrecio(desde) : '[DATO FALTANTE]'}
+        </span>
+      </p>
+      {
+        href ? (
+          <a
+            href={href}
+            class="rounded-full border border-foreground/20 px-4 py-2 text-sm font-medium transition hover:border-accent hover:text-accent"
+          >
+            Ver detalles<span class="sr-only"> de {nombre_corto}</span>
+          </a>
+        ) : (
+          <span class="text-sm font-medium text-muted">Próximamente</span>
+        )
+      }
+    </div>
+  </div>
+</article>

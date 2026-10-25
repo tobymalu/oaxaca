@@ -1,0 +1,38 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import CategoryHeader from '../../components/CategoryHeader.astro';
+import ArticuloCard from '../../components/ArticuloCard.astro';
+import EmptySilo from '../../components/EmptySilo.astro';
+import { getSilo } from '../../lib/colecciones';
+
+const articulos = await getSilo('gastronomia');
+---
+
+<Layout
+  title="Guía gastronómica de Oaxaca: mercados, mezcal y platillos"
+  description="Qué comer y beber en Oaxaca: mercados tradicionales, tlayudas, moles, chocolate y los mejores palenques de mezcal. Guía gastronómica local."
+>
+  <CategoryHeader
+    breadcrumb="Gastronomía"
+    path="/gastronomia"
+    eyebrow="Gastronomía"
+    h1="Guía Gastronómica de Oaxaca"
+    intro="Mercados llenos de humo y color, moles de siglos de tradición y mezcal artesanal. Todo lo que tienes que probar en Oaxaca y dónde encontrarlo."
+  />
+
+  <section aria-label="Artículos de gastronomía" class="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
+    {
+      articulos.length > 0 ? (
+        <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {articulos.map((articulo) => (
+            <li>
+              <ArticuloCard articulo={articulo} headingLevel="h2" />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <EmptySilo />
+      )
+    }
+  </section>
+</Layout>
