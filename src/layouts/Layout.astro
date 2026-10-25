@@ -33,7 +33,10 @@ const {
   transparentHeader = false,
 } = Astro.props;
 
-const canonicalURL = new URL(canonicalPath ?? Astro.url.pathname, SITE.url);
+// Con build.format 'file' el pathname llega como /destinos.html o /index.html;
+// se normaliza a la URL pública sin extensión ni barra final (/destinos, /).
+const publicPath = Astro.url.pathname.replace(/(\/index)?\.html$/, '') || '/';
+const canonicalURL = new URL(canonicalPath ?? publicPath, SITE.url);
 const ogImageURL = new URL(ogImage, SITE.url);
 const fullTitle = title.includes(SITE.name) ? title : `${title} | ${SITE.name}`;
 ---
