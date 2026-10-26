@@ -3,7 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import CategoryHeader from '../../components/CategoryHeader.astro';
 import TourCard from '../../components/TourCard.astro';
 import EmptySilo from '../../components/EmptySilo.astro';
-import { getSilo } from '../../lib/colecciones';
+import { entradaHref, getSilo } from '../../lib/colecciones';
 
 const [experiencias, destinos] = await Promise.all([getSilo('experiencias'), getSilo('destinos')]);
 const nombresDestino = Object.fromEntries(destinos.map((d) => [d.id, d.data.nombre_corto]));
@@ -30,6 +30,7 @@ const nombresDestino = Object.fromEntries(destinos.map((d) => [d.id, d.data.nomb
               <TourCard
                 experiencia={experiencia}
                 destinoNombre={nombresDestino[experiencia.data.destino.id] ?? ''}
+                href={entradaHref('experiencias', experiencia.id)}
                 headingLevel="h2"
               />
             </li>

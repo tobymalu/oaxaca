@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import ArticuloCard from './ArticuloCard.astro';
 import SectionHeader from './SectionHeader.astro';
+import { entradaHref } from '../lib/colecciones';
 
 interface Props {
   articulos: CollectionEntry<'gastronomia'>[];
@@ -24,7 +25,7 @@ const { articulos } = Astro.props;
       {
         articulos.map((articulo) => (
           <li>
-            <ArticuloCard articulo={articulo} />
+            <ArticuloCard articulo={articulo} href={entradaHref('gastronomia', articulo.id)} />
           </li>
         ))
       }

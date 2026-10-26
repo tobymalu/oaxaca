@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import TourCard from './TourCard.astro';
 import SectionHeader from './SectionHeader.astro';
+import { entradaHref } from '../lib/colecciones';
 
 interface Props {
   experiencias: CollectionEntry<'experiencias'>[];
@@ -33,7 +34,11 @@ const { experiencias, nombresDestino } = Astro.props;
     {
       experiencias.map((experiencia) => (
         <li class="w-[80%] shrink-0 snap-start sm:w-[45%] lg:w-auto">
-          <TourCard experiencia={experiencia} destinoNombre={nombresDestino[experiencia.data.destino.id] ?? ''} />
+          <TourCard
+            experiencia={experiencia}
+            destinoNombre={nombresDestino[experiencia.data.destino.id] ?? ''}
+            href={entradaHref('experiencias', experiencia.id)}
+          />
         </li>
       ))
     }

@@ -3,7 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import CategoryHeader from '../../components/CategoryHeader.astro';
 import ArticuloCard from '../../components/ArticuloCard.astro';
 import EmptySilo from '../../components/EmptySilo.astro';
-import { getSilo } from '../../lib/colecciones';
+import { entradaHref, getSilo } from '../../lib/colecciones';
 
 const articulos = await getSilo('gastronomia');
 ---
@@ -26,7 +26,7 @@ const articulos = await getSilo('gastronomia');
         <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {articulos.map((articulo) => (
             <li>
-              <ArticuloCard articulo={articulo} headingLevel="h2" />
+              <ArticuloCard articulo={articulo} href={entradaHref('gastronomia', articulo.id)} headingLevel="h2" />
             </li>
           ))}
         </ul>

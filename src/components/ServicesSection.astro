@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import { planTripHref } from '../lib/site';
+import { entradaHref } from '../lib/colecciones';
 import santoDomingo from '../assets/images/santo-domingo-atardecer-oaxaca.jpg';
 
 interface Props {
@@ -45,7 +46,11 @@ const cotizarExternal = cotizarHref.startsWith('http');
                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 12.5l4.5 4.5L19 7" />
               </svg>
               <div>
-                <h3 class="font-semibold">{s.data.nombre_corto}</h3>
+                <h3 class="font-semibold">
+                  <a href={entradaHref('servicios', s.id)} class="underline-offset-4 hover:text-accent hover:underline">
+                    {s.data.nombre_corto}
+                  </a>
+                </h3>
                 <p class="mt-1 text-muted">{s.data.descripcion}</p>
               </div>
             </li>
