@@ -1,7 +1,10 @@
 ---
 // Estado vacío de una página índice mientras la colección no tiene entradas.
+import { getLang, useT } from '../i18n/ui';
+
+const t = useT(getLang(Astro.currentLocale));
 ---
 
 <p class="rounded-2xl border border-dashed border-foreground/20 p-10 text-center text-muted">
-  Estamos preparando este contenido. Vuelve pronto.
+  {t.silos.empty}
 </p>

@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import ImagePlaceholder from './ImagePlaceholder.astro';
 import { precioDesde, formatPrecio } from '../lib/precios';
+import { getLang, useT } from '../i18n/ui';
 
 interface Props {
   experiencia: CollectionEntry<'experiencias'>;
@@ -15,6 +16,8 @@ interface Props {
 const { experiencia, destinoNombre, href, headingLevel: Heading = 'h3' } = Astro.props;
 const { nombre_corto, imagen_portada, badge, calificacion, precios } = experiencia.data;
 const desde = precioDesde(precios);
+const lang = getLang(Astro.currentLocale);
+const t = useT(lang);
 ---
 
 <article class="flex h-full flex-col overflow-hidden rounded-2xl border border-foreground/10 bg-background shadow-sm transition hover:shadow-lg">
@@ -54,18 +57,18 @@ const desde = precioDesde(precios);
             <path d="M10 1.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.5 7.7l5.9-.9z" />
           </svg>
           <span class="font-semibold">{calificacion.valor.toFixed(1)}</span>
-          <span class="text-muted">({calificacion.resenas} reseñas)</span>
+          <span class="text-muted">{t.cards.reviews(calificacion.resenas)}</span>
         </p>
       ) : (
-        <p class="mt-2 text-sm text-muted">Calificación: [DATO FALTANTE]</p>
+        <p class="mt-2 text-sm text-muted">{t.cards.ratingMissing}</p>
       )
     }
 
     <div class="mt-auto flex items-end justify-between gap-3 pt-5">
       <p class="text-sm text-muted">
-        Desde
+        {t.cards.from}
         <span class="block text-lg font-semibold text-foreground">
-          {desde ? formatPrecio(desde) : '[DATO FALTANTE]'}
+          {desde ? formatPrecio(desde, lang) : '[DATO FALTANTE]'}
         </span>
       </p>
       {
@@ -74,10 +77,10 @@ const desde = precioDesde(precios);
             href={href}
             class="shrink-0 rounded-full border border-foreground/20 px-4 py-2 text-sm font-medium whitespace-nowrap transition hover:border-accent hover:text-accent"
           >
-            Ver detalles<span class="sr-only"> de {nombre_corto}</span>
+            {t.cards.details}<span class="sr-only">{t.cards.detailsOf(nombre_corto)}</span>
           </a>
         ) : (
-          <span class="text-sm font-medium text-muted">Próximamente</span>
+          <span class="text-sm font-medium text-muted">{t.cards.soon}</span>
         )
       }
     </div>

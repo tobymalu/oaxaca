@@ -1,7 +1,9 @@
+import { PAGE_PATHS, type Lang } from '../i18n/rutas';
+
 /**
- * Datos de marca centralizados. Todo componente que necesite nombre,
- * contacto o links de Visita Oaxaca debe importar de aquí — nunca
- * hardcodear estos valores en un componente individual.
+ * Datos de marca centralizados (independientes del idioma). Los textos de
+ * interfaz viven en src/i18n/ui.ts. Ningún componente debe hardcodear
+ * contacto ni links de la marca.
  *
  * ⚠️ PENDIENTE: todavía no hay método de contacto. Los campos vacíos
  * (email, teléfono, WhatsApp, redes, GTM, newsletter) no se renderizan
@@ -9,12 +11,8 @@
  */
 
 export const SITE = {
+  // Marca: no se traduce (es el dominio).
   name: 'Visita Oaxaca',
-  tagline: 'Tu guía para descubrir Oaxaca: cultura, gastronomía, mezcal y costa',
-  // <title> y meta description por defecto (Layout.astro) cuando la página no pasa los suyos.
-  defaultTitle: 'Visita Oaxaca | Experiencias, Tours y Cultura',
-  defaultDescription:
-    'Descubre la magia de Oaxaca. Reserva tours exclusivos, conoce nuestra gastronomía, historia y vive experiencias auténticas con expertos locales.',
   // Dominio real de producción — debe coincidir con `site` en astro.config.mjs
   url: 'https://visitaoaxaca.com.mx',
   // TODO: email de contacto
@@ -28,7 +26,6 @@ export const SITE = {
   whatsapp: {
     // TODO: número de WhatsApp, sin "+" ni espacios (formato wa.me)
     number: '',
-    defaultMessage: 'Hola, me gustaría información para visitar Oaxaca.',
   },
   social: {
     // TODO: completar o quitar las redes que no apliquen
@@ -58,42 +55,18 @@ export const BRAND_COLORS = {
 
 export const hasContact = Boolean(SITE.email || SITE.phone.e164 || SITE.whatsapp.number);
 
-export function whatsappUrl(message: string = SITE.whatsapp.defaultMessage): string {
+export function whatsappUrl(message: string): string {
   return `https://wa.me/${SITE.whatsapp.number}?text=${encodeURIComponent(message)}`;
 }
 
 /**
  * Destino de los CTA "Planear viaje" / "Cotizar": WhatsApp cuando exista
- * el número; mientras tanto, el widget de búsqueda del Home.
+ * el número; mientras tanto, el widget de búsqueda del Home del idioma.
  */
-export function planTripHref(message?: string): string {
-  return SITE.whatsapp.number ? whatsappUrl(message) : '/#planear';
+export function planTripHref(lang: Lang, message: string): string {
+  if (SITE.whatsapp.number) return whatsappUrl(message);
+  return `${PAGE_PATHS.home[lang]}#planear`;
 }
-
-export type NavLink = {
-  href: string;
-  label: string;
-};
-
-// Hubs de cada silo de contenido (src/content/*).
-export const NAV_LINKS: NavLink[] = [
-  { href: '/destinos', label: 'Destinos' },
-  { href: '/experiencias', label: 'Experiencias' },
-  { href: '/gastronomia', label: 'Gastronomía' },
-  { href: '/servicios', label: 'Servicios' },
-];
-
-export const POPULAR_LINKS: NavLink[] = [
-  { href: '/destinos', label: 'Regiones de Oaxaca' },
-  { href: '/experiencias', label: 'Tours y experiencias' },
-  { href: '/gastronomia', label: 'Guía gastronómica' },
-  { href: '/servicios', label: 'Traslados y bodas de destino' },
-];
-
-export const LEGAL_LINKS: NavLink[] = [
-  { href: '/aviso-de-privacidad', label: 'Aviso de privacidad' },
-  { href: '/politicas-de-cancelacion', label: 'Políticas de cancelación' },
-];
 
 export type PartnerLink = {
   href: string;

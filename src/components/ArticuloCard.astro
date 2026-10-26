@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import ImagePlaceholder from './ImagePlaceholder.astro';
+import { getLang, useT } from '../i18n/ui';
 
 interface Props {
   articulo: CollectionEntry<'gastronomia'>;
@@ -12,6 +13,7 @@ interface Props {
 const { articulo, href, headingLevel: Heading = 'h3' } = Astro.props;
 const { nombre_corto, descripcion, imagen_portada, categoria } = articulo.data;
 const Tag = href ? 'a' : 'article';
+const t = useT(getLang(Astro.currentLocale));
 ---
 
 <Tag
@@ -36,11 +38,11 @@ const Tag = href ? 'a' : 'article';
     }
   </div>
   <div class="flex flex-1 flex-col p-6">
-    <p class="text-xs font-semibold uppercase tracking-wide text-accent">{categoria}</p>
+    <p class="text-xs font-semibold uppercase tracking-wide text-accent">{t.categorias[categoria]}</p>
     <Heading class="mt-2 font-heading text-xl font-semibold leading-snug">{nombre_corto}</Heading>
     <p class="mt-2 text-sm text-muted">{descripcion}</p>
     <p class="mt-auto pt-4 text-sm font-medium text-muted">
-      {href ? 'Leer artículo →' : 'Próximamente'}
+      {href ? t.cards.readArticle : t.cards.soon}
     </p>
   </div>
 </Tag>

@@ -7,11 +7,13 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
 import GoogleTagManager from '../components/GoogleTagManager.astro';
 import GoogleTagManagerNoscript from '../components/GoogleTagManagerNoscript.astro';
 import { SITE, BRAND_COLORS } from '../lib/site';
+import { DEFAULT_LANG, LANGS, LOCALE_TAGS, type Alternates } from '../i18n/rutas';
+import { getLang, useT } from '../i18n/ui';
 
 interface Props {
-  /** <title> y og:title — distinto del H1 editorial de la página. Default: SITE.defaultTitle. */
+  /** <title> y og:title — distinto del H1 editorial de la página. Default: meta.defaultTitle del idioma. */
   title?: string;
-  /** Default: SITE.defaultDescription. */
+  /** Default: meta.defaultDescription del idioma. */
   description?: string;
   /** Ruta absoluta opcional para forzar el canonical (ej. contenido duplicado/paginado). */
   canonicalPath?: string;
@@ -20,29 +22,46 @@ interface Props {
   ogType?: 'website' | 'article';
   /** Header transparente sobre un hero a pantalla completa (la página no debe dejar espacio arriba). */
   transparentHeader?: boolean;
+  /** Versiones de esta página por idioma → selector de idioma. Incluye la actual. */
+  translations?: Alternates;
+  /** Versiones indexables → hreflang. Default: `translations`. */
+  hreflang?: Alternates;
 }
 
+const lang = getLang(Astro.currentLocale);
+const t = useT(lang);
+
+// Con build.format 'file' el pathname llega como /destinos.html o /index.html;
+// se normaliza a la URL pública sin extensión ni barra final (/destinos, /).
+const publicPath = Astro.url.pathname.replace(/(\/index)?\.html$/, '') || '/';
+
 const {
-  title = SITE.defaultTitle,
-  description = SITE.defaultDescription,
+  title = t.meta.defaultTitle,
+  description = t.meta.defaultDescription,
   canonicalPath,
   noindex = false,
   // TODO: reemplazar por una imagen OG real (1200×630) cuando haya fotografía.
   ogImage = '/favicon.svg',
   ogType = 'website',
   transparentHeader = false,
+  translations = { [lang]: publicPath },
+  hreflang = translations,
 } = Astro.props;
 
-// Con build.format 'file' el pathname llega como /destinos.html o /index.html;
-// se normaliza a la URL pública sin extensión ni barra final (/destinos, /).
-const publicPath = Astro.url.pathname.replace(/(\/index)?\.html$/, '') || '/';
 const canonicalURL = new URL(canonicalPath ?? publicPath, SITE.url);
 const ogImageURL = new URL(ogImage, SITE.url);
 const fullTitle = title.includes(SITE.name) ? title : `${title} | ${SITE.name}`;
+
+// hreflang solo en páginas indexables, siempre incluyendo la propia y x-default.
+const hreflangLinks = noindex
+  ? []
+  : LANGS.flatMap((l) => (hreflang[l] ? [{ hreflang: l, href: new URL(hreflang[l], SITE.url) }] : []));
+const xDefault = hreflang[DEFAULT_LANG] ?? hreflang[lang];
+const otherLocales = LANGS.filter((l) => l !== lang && hreflang[l]);
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang={LOCALE_TAGS[lang].html}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -58,8 +77,8 @@ const fullTitle = title.includes(SITE.name) ? title : `${title} | ${SITE.name}`;
     <link rel="canonical" href={canonicalURL} />
     <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
 
-    <link rel="alternate" hreflang="es" href={canonicalURL} />
-    <link rel="alternate" hreflang="x-default" href={canonicalURL} />
+    {hreflangLinks.map((alt) => <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />)}
+    {!noindex && xDefault && <link rel="alternate" hreflang="x-default" href={new URL(xDefault, SITE.url)} />}
 
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={SITE.name} />
@@ -67,7 +86,8 @@ const fullTitle = title.includes(SITE.name) ? title : `${title} | ${SITE.name}`;
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content={ogImageURL} />
-    <meta property="og:locale" content="es_MX" />
+    <meta property="og:locale" content={LOCALE_TAGS[lang].og} />
+    {otherLocales.map((l) => <meta property="og:locale:alternate" content={LOCALE_TAGS[l].og} />)}
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
@@ -94,10 +114,10 @@ const fullTitle = title.includes(SITE.name) ? title : `${title} | ${SITE.name}`;
       href="#content"
       class="sr-only fixed left-4 top-4 z-50 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground focus:not-sr-only"
     >
-      Saltar al contenido
+      {t.a11y.skipToContent}
     </a>
 
-    <Header transparent={transparentHeader} />
+    <Header transparent={transparentHeader} translations={translations} />
 
     <main id="content">
       <slot />

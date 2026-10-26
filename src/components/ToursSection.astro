@@ -3,6 +3,8 @@ import type { CollectionEntry } from 'astro:content';
 import TourCard from './TourCard.astro';
 import SectionHeader from './SectionHeader.astro';
 import { entradaHref } from '../lib/colecciones';
+import { SILO_PATHS } from '../i18n/rutas';
+import { getLang, useT } from '../i18n/ui';
 
 interface Props {
   experiencias: CollectionEntry<'experiencias'>[];
@@ -11,17 +13,19 @@ interface Props {
 }
 
 const { experiencias, nombresDestino } = Astro.props;
+const lang = getLang(Astro.currentLocale);
+const t = useT(lang);
 ---
 
 <section id="experiencias" aria-labelledby="experiencias-titulo" class="bg-surface py-20">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <SectionHeader
       id="experiencias-titulo"
-      eyebrow="Tours"
-      title="Experiencias Inolvidables"
-      intro="Precios finales y transparentes: lo que ves es lo que pagas, sin costos ocultos."
-      hubHref="/experiencias"
-      hubLabel="Ver todas las experiencias"
+      eyebrow={t.home.experiencias.eyebrow}
+      title={t.home.experiencias.title}
+      intro={t.home.experiencias.intro}
+      hubHref={SILO_PATHS.experiencias[lang]}
+      hubLabel={t.home.experiencias.hub}
     />
   </div>
 
@@ -29,7 +33,7 @@ const { experiencias, nombresDestino } = Astro.props;
   <ul
     class="mx-auto mt-10 flex max-w-7xl snap-x snap-mandatory gap-5 overflow-x-auto scroll-px-4 px-4 pb-4 sm:scroll-px-6 sm:px-6 lg:grid lg:grid-cols-4 lg:overflow-visible lg:px-8"
     tabindex="0"
-    aria-label="Experiencias destacadas"
+    aria-label={t.home.experiencias.listLabel}
   >
     {
       experiencias.map((experiencia) => (

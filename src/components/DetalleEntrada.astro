@@ -4,6 +4,7 @@
 // slot "relacionados" va debajo del artículo a todo lo ancho.
 import { Image } from 'astro:assets';
 import Breadcrumbs from './Breadcrumbs.astro';
+import { getLang, useT } from '../i18n/ui';
 
 interface Props {
   silo: { label: string; path: string };
@@ -19,6 +20,7 @@ interface Props {
 
 const { silo, eyebrow, titulo, nombreCorto, descripcion, path, imagen, conContenido } = Astro.props;
 const conSidebar = Astro.slots.has('sidebar');
+const t = useT(getLang(Astro.currentLocale));
 ---
 
 <header class="mx-auto max-w-7xl px-4 pt-10 sm:px-6 lg:px-8">
@@ -58,7 +60,7 @@ const conSidebar = Astro.slots.has('sidebar');
         <slot />
       ) : (
         <p class="rounded-2xl border border-dashed border-foreground/20 p-6 text-muted not-prose">
-          [DATO FALTANTE]: contenido de este artículo.
+          {t.detalle.contentMissing}
         </p>
       )
     }

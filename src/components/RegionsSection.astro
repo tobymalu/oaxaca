@@ -3,21 +3,25 @@ import type { CollectionEntry } from 'astro:content';
 import DestinoCard from './DestinoCard.astro';
 import SectionHeader from './SectionHeader.astro';
 import { entradaHref } from '../lib/colecciones';
+import { SILO_PATHS } from '../i18n/rutas';
+import { getLang, useT } from '../i18n/ui';
 
 interface Props {
   destinos: CollectionEntry<'destinos'>[];
 }
 
 const { destinos } = Astro.props;
+const lang = getLang(Astro.currentLocale);
+const t = useT(lang);
 ---
 
 <section id="regiones" aria-labelledby="regiones-titulo" class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
   <SectionHeader
     id="regiones-titulo"
-    eyebrow="Destinos"
-    title="Explora las Regiones de Oaxaca"
-    hubHref="/destinos"
-    hubLabel="Ver todos los destinos"
+    eyebrow={t.home.regiones.eyebrow}
+    title={t.home.regiones.title}
+    hubHref={SILO_PATHS.destinos[lang]}
+    hubLabel={t.home.regiones.hub}
   />
 
   <ul class="mt-10 grid gap-6 md:grid-cols-3">

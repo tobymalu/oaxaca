@@ -1,0 +1,20 @@
+---
+// Páginas fijas aún sin contenido real (búsqueda y legales). Siempre noindex.
+import Layout from '../layouts/Layout.astro';
+import PlaceholderPage from '../components/PlaceholderPage.astro';
+import { PAGE_PATHS } from '../i18n/rutas';
+import { getLang, useT } from '../i18n/ui';
+
+interface Props {
+  pagina: 'buscar' | 'privacidad' | 'cancelaciones';
+}
+
+const { pagina } = Astro.props;
+const textos = useT(getLang(Astro.currentLocale)).pages[pagina];
+---
+
+<Layout title={textos.title} description={textos.description} noindex translations={PAGE_PATHS[pagina]}>
+  <PlaceholderPage eyebrow={textos.eyebrow} heading={textos.heading} faltante={textos.missing}>
+    {textos.body}
+  </PlaceholderPage>
+</Layout>

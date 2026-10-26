@@ -1,14 +1,17 @@
 ---
 import { SITE, whatsappUrl } from '../lib/site';
+import { getLang, useT } from '../i18n/ui';
+
+const t = useT(getLang(Astro.currentLocale));
 ---
 
 {
   SITE.whatsapp.number && (
     <a
-      href={whatsappUrl()}
+      href={whatsappUrl(t.whatsappMessages.default)}
       target="_blank"
       rel="noopener"
-      aria-label="Escríbenos por WhatsApp"
+      aria-label={t.a11y.whatsapp}
       class="fixed right-4 bottom-4 z-40 flex size-14 items-center justify-center rounded-full bg-accent text-accent-foreground shadow-lg transition hover:scale-105 focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:outline-none"
     >
       <svg class="size-7" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">

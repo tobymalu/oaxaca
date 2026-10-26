@@ -6,15 +6,18 @@ interface Props {
   class?: string;
 }
 
+import { getLang, useT } from '../i18n/ui';
+
 const { label, class: className } = Astro.props;
+const t = useT(getLang(Astro.currentLocale));
 ---
 
 <div
   class:list={['flex items-center justify-center bg-linear-to-br from-muted to-foreground', className]}
   role="img"
-  aria-label={`Foto pendiente: ${label}`}
+  aria-label={`${t.a11y.photoPending}: ${label}`}
 >
-  <div class="bg-zapotec-pattern absolute inset-0 opacity-100" aria-hidden="true"></div>
+  <div class="bg-zapotec-pattern absolute inset-0" aria-hidden="true"></div>
   <span class="relative px-4 text-center text-xs font-medium uppercase tracking-widest text-background/70">
     [DATO FALTANTE] Foto
   </span>

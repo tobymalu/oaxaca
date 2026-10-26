@@ -7,6 +7,10 @@ import { z } from 'astro/zod';
  * Silos de contenido (Hub & Spoke): cada colección es un silo con su
  * página índice (/destinos, /experiencias, /gastronomia, /servicios).
  *
+ * Bilingüe: src/content/<silo>/es/*.mdx y src/content/<silo>/en/*.mdx.
+ * El nombre del archivo es el slug traducido de la URL; `clave` une las
+ * dos versiones (hreflang y selector de idioma). Ver src/i18n/rutas.ts.
+ *
  * Separación de títulos — nunca reutilizar el mismo string:
  * - `titulo`          → H1 editorial/persuasivo de la página del artículo.
  * - `nombre_corto`    → UI: tarjetas, breadcrumbs, menús.
@@ -30,6 +34,9 @@ const precioNivelSchema = z.object({
 
 const baseSchema = ({ image }: SchemaContext) =>
   z.object({
+    // Une las traducciones de una misma página (mismo valor en es/ y en/).
+    // Convención: el nombre del archivo en español.
+    clave: z.string(),
     titulo: z.string(),
     nombre_corto: z.string().max(40),
     descripcion: z.string(),
@@ -75,7 +82,8 @@ const gastronomia = defineCollection({
   loader: glob({ pattern: '**/*.mdx', base: './src/content/gastronomia' }),
   schema: (ctx) =>
     baseSchema(ctx).extend({
-      categoria: z.enum(['Mercados', 'Mezcal', 'Platillos', 'Restaurantes']),
+      // Llave; la etiqueta visible sale de `categorias` en src/i18n/ui.ts.
+      categoria: z.enum(['mercados', 'mezcal', 'platillos', 'restaurantes']),
     }),
 });
 

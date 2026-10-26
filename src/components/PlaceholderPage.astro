@@ -2,6 +2,8 @@
 // Contenido de rutas que ya están enlazadas pero aún no tienen contenido
 // real. Las páginas que lo usan deben ir con `noindex`.
 import { SITE, whatsappUrl } from '../lib/site';
+import { PAGE_PATHS } from '../i18n/rutas';
+import { getLang, useT } from '../i18n/ui';
 
 interface Props {
   eyebrow: string;
@@ -10,6 +12,8 @@ interface Props {
 }
 
 const { eyebrow, heading, faltante } = Astro.props;
+const lang = getLang(Astro.currentLocale);
+const t = useT(lang);
 ---
 
 <section class="mx-auto max-w-2xl px-4 py-32 text-center sm:px-6">
@@ -19,20 +23,20 @@ const { eyebrow, heading, faltante } = Astro.props;
   <p class="mt-4 text-sm text-muted">[DATO FALTANTE]: {faltante}</p>
   <div class="mt-8 flex flex-wrap justify-center gap-3">
     <a
-      href="/"
+      href={PAGE_PATHS.home[lang]}
       class="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition hover:brightness-95"
     >
-      Volver al inicio
+      {t.placeholder.backHome}
     </a>
     {
       SITE.whatsapp.number && (
         <a
-          href={whatsappUrl()}
+          href={whatsappUrl(t.whatsappMessages.default)}
           target="_blank"
           rel="noopener"
           class="rounded-full border border-foreground/20 px-6 py-3 text-sm font-semibold transition hover:border-accent hover:text-accent"
         >
-          Escríbenos por WhatsApp
+          {t.a11y.whatsapp}
         </a>
       )
     }

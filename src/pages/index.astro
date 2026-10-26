@@ -1,34 +1,5 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Hero from '../components/Hero.astro';
-import RegionsSection from '../components/RegionsSection.astro';
-import ToursSection from '../components/ToursSection.astro';
-import ServicesSection from '../components/ServicesSection.astro';
-import GuideSection from '../components/GuideSection.astro';
-import { getSilo, destacadosORecientes } from '../lib/colecciones';
-
-// Todo se resuelve en build (output static): cero JS de cliente para estas listas.
-const [destinos, experiencias, gastronomia, servicios] = await Promise.all([
-  getSilo('destinos'),
-  getSilo('experiencias'),
-  getSilo('gastronomia'),
-  getSilo('servicios'),
-]);
-
-// Destacados primero; si no alcanzan, se completa con los más recientes.
-const destinosHome = destacadosORecientes(destinos, 3);
-const experienciasHome = destacadosORecientes(experiencias, 4);
-const gastronomiaHome = destacadosORecientes(gastronomia, 3);
-const serviciosHome = destacadosORecientes(servicios, 3);
-
-// Etiqueta de región de cada tour (experiencias.destino → destinos.nombre_corto).
-const nombresDestino = Object.fromEntries(destinos.map((d) => [d.id, d.data.nombre_corto]));
+import HomePage from '../views/HomePage.astro';
 ---
 
-<Layout transparentHeader>
-  <Hero />
-  <RegionsSection destinos={destinosHome} />
-  <ToursSection experiencias={experienciasHome} nombresDestino={nombresDestino} />
-  <ServicesSection servicios={serviciosHome} />
-  <GuideSection articulos={gastronomiaHome} />
-</Layout>
+<HomePage />

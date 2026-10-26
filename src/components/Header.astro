@@ -1,13 +1,21 @@
 ---
-import { SITE, NAV_LINKS, planTripHref } from '../lib/site';
+import { SITE, planTripHref } from '../lib/site';
+import { PAGE_PATHS, type Alternates } from '../i18n/rutas';
+import { getLang, navLinks, useT } from '../i18n/ui';
+import LanguageSwitcher from './LanguageSwitcher.astro';
 
 interface Props {
   /** Transparente sobre un hero a pantalla completa y sólido al hacer scroll (solo Home). */
   transparent?: boolean;
+  /** Versiones de la página actual por idioma (para el selector de idioma). */
+  translations: Alternates;
 }
 
-const { transparent = false } = Astro.props;
-const ctaHref = planTripHref();
+const { transparent = false, translations } = Astro.props;
+const lang = getLang(Astro.currentLocale);
+const t = useT(lang);
+const links = navLinks(lang);
+const ctaHref = planTripHref(lang, t.whatsappMessages.default);
 const ctaExternal = ctaHref.startsWith('http');
 ---
 
@@ -21,14 +29,14 @@ const ctaExternal = ctaHref.startsWith('http');
 >
   <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
     <!-- [DATO FALTANTE]: logo de marca. Mientras tanto, wordmark tipográfico. -->
-    <a href="/" class="font-heading text-xl font-semibold tracking-tight">
+    <a href={PAGE_PATHS.home[lang]} class="font-heading text-xl font-semibold tracking-tight">
       {SITE.name}
     </a>
 
-    <nav aria-label="Principal" class="hidden md:block">
+    <nav aria-label={t.a11y.mainNav} class="hidden md:block">
       <ul class="flex items-center gap-8 text-sm font-medium">
         {
-          NAV_LINKS.map((link) => (
+          links.map((link) => (
             <li>
               <a href={link.href} class="underline-offset-8 transition hover:underline">
                 {link.label}
@@ -40,19 +48,21 @@ const ctaExternal = ctaHref.startsWith('http');
     </nav>
 
     <div class="flex items-center gap-3">
+      <LanguageSwitcher translations={translations} />
+
       <a
         href={ctaHref}
         class="hidden rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition hover:brightness-95 sm:inline-block"
         {...ctaExternal && { target: '_blank', rel: 'noopener' }}
       >
-        Planear viaje
+        {t.nav.planTrip}
       </a>
 
       <!-- Menú móvil sin JS: <details> nativo -->
       <details class="group relative md:hidden">
         <summary
           class="flex size-10 cursor-pointer list-none items-center justify-center rounded-full [&::-webkit-details-marker]:hidden"
-          aria-label="Abrir menú"
+          aria-label={t.a11y.openMenu}
         >
           <svg class="size-6 group-open:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"></path>
@@ -62,12 +72,12 @@ const ctaExternal = ctaHref.startsWith('http');
           </svg>
         </summary>
         <nav
-          aria-label="Principal móvil"
+          aria-label={t.a11y.mobileNav}
           class="absolute right-0 mt-2 w-56 rounded-xl border border-foreground/10 bg-background p-2 text-foreground shadow-xl"
         >
           <ul class="text-sm font-medium">
             {
-              NAV_LINKS.map((link) => (
+              links.map((link) => (
                 <li>
                   <a href={link.href} class="block rounded-lg px-3 py-2.5 hover:bg-surface">
                     {link.label}
@@ -81,7 +91,7 @@ const ctaExternal = ctaHref.startsWith('http');
                 class="block rounded-lg bg-primary px-3 py-2.5 text-center font-semibold text-primary-foreground"
                 {...ctaExternal && { target: '_blank', rel: 'noopener' }}
               >
-                Planear viaje
+                {t.nav.planTrip}
               </a>
             </li>
           </ul>

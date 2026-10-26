@@ -4,13 +4,17 @@ import type { CollectionEntry } from 'astro:content';
 import { planTripHref } from '../lib/site';
 import { entradaHref } from '../lib/colecciones';
 import santoDomingo from '../assets/images/santo-domingo-atardecer-oaxaca.jpg';
+import { SILO_PATHS } from '../i18n/rutas';
+import { getLang, useT } from '../i18n/ui';
 
 interface Props {
   servicios: CollectionEntry<'servicios'>[];
 }
 
 const { servicios } = Astro.props;
-const cotizarHref = planTripHref('Hola, me gustaría cotizar un servicio con Visita Oaxaca.');
+const lang = getLang(Astro.currentLocale);
+const t = useT(lang);
+const cotizarHref = planTripHref(lang, t.whatsappMessages.quote);
 const cotizarExternal = cotizarHref.startsWith('http');
 ---
 
@@ -19,7 +23,7 @@ const cotizarExternal = cotizarHref.startsWith('http');
     <div class="relative lg:col-span-5">
       <Image
         src={santoDomingo}
-        alt="Fachada del templo de Santo Domingo en Oaxaca, sede tradicional de bodas"
+        alt={t.home.servicios.imageAlt}
         width={960}
         widths={[480, 720, 960]}
         sizes="(min-width: 1024px) 40vw, 100vw"
@@ -30,12 +34,12 @@ const cotizarExternal = cotizarHref.startsWith('http');
     </div>
 
     <div class="lg:col-span-7">
-      <p class="text-sm font-semibold uppercase tracking-widest text-accent">Servicios premium</p>
+      <p class="text-sm font-semibold uppercase tracking-widest text-accent">{t.home.servicios.eyebrow}</p>
       <h2 id="servicios-titulo" class="mt-2 text-3xl font-semibold sm:text-4xl">
-        Tu viaje resuelto, de principio a fin
+        {t.home.servicios.title}
       </h2>
       <p class="mt-4 text-lg text-muted">
-        Para viajeros que quieren vivir Oaxaca sin preocuparse por la logística.
+        {t.home.servicios.intro}
       </p>
 
       <ul class="mt-8 space-y-6">
@@ -64,10 +68,10 @@ const cotizarExternal = cotizarHref.startsWith('http');
           class="inline-block rounded-full bg-primary px-8 py-3.5 font-semibold text-primary-foreground shadow-sm transition hover:brightness-95"
           {...cotizarExternal && { target: '_blank', rel: 'noopener' }}
         >
-          Solicitar cotización
+          {t.home.servicios.cta}
         </a>
-        <a href="/servicios" class="text-sm font-semibold text-accent underline-offset-4 hover:underline">
-          Ver todos los servicios <span aria-hidden="true">→</span>
+        <a href={SILO_PATHS.servicios[lang]} class="text-sm font-semibold text-accent underline-offset-4 hover:underline">
+          {t.home.servicios.hub} <span aria-hidden="true">→</span>
         </a>
       </div>
     </div>

@@ -1,0 +1,115 @@
+---
+// Página de detalle de cualquier entrada de cualquier silo e idioma.
+// `entry.collection` decide el eyebrow, la barra de precios y los relacionados.
+import { getEntry, render, type CollectionEntry } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import DetalleEntrada from '../components/DetalleEntrada.astro';
+import PreciosSidebar from '../components/PreciosSidebar.astro';
+import TourCard from '../components/TourCard.astro';
+import { alternatesDe, entradaHref, getSilo, tieneContenido } from '../lib/colecciones';
+import { ogImageDe } from '../lib/og';
+import { SILO_PATHS } from '../i18n/rutas';
+import { getLang, useT } from '../i18n/ui';
+
+interface Props {
+  entry:
+    | CollectionEntry<'destinos'>
+    | CollectionEntry<'experiencias'>
+    | CollectionEntry<'gastronomia'>
+    | CollectionEntry<'servicios'>;
+}
+
+const { entry } = Astro.props;
+const lang = getLang(Astro.currentLocale);
+const t = useT(lang);
+const { data } = entry;
+const { Content } = await render(entry);
+const conContenido = tieneContenido(entry);
+const ogImage = await ogImageDe(data.imagen_portada);
+const { traducciones, hreflang } = await alternatesDe(entry.collection, entry);
+
+// Específico por silo.
+let eyebrow: string = t.detalle.destino;
+let destinoRef: CollectionEntry<'destinos'> | undefined;
+let experienciasDelDestino: CollectionEntry<'experiencias'>[] = [];
+
+switch (entry.collection) {
+  case 'experiencias':
+    destinoRef = await getEntry(entry.data.destino);
+    eyebrow = destinoRef ? `${t.detalle.experiencia} · ${destinoRef.data.nombre_corto}` : t.detalle.experiencia;
+    break;
+  case 'servicios':
+    eyebrow = t.detalle.servicio;
+    break;
+  case 'gastronomia':
+    eyebrow = `${t.detalle.gastronomia} · ${t.categorias[entry.data.categoria]}`;
+    break;
+  case 'destinos':
+    // Hub → spokes: experiencias que referencian este destino.
+    experienciasDelDestino = (await getSilo('experiencias', lang)).filter((e) => e.data.destino.id === entry.id);
+    break;
+}
+
+const precios = entry.collection === 'experiencias' || entry.collection === 'servicios' ? entry.data.precios : undefined;
+---
+
+<Layout
+  title={data.seo.meta_title}
+  description={data.seo.meta_description}
+  noindex={data.seo.noindex || !conContenido}
+  ogImage={ogImage}
+  ogType="article"
+  translations={traducciones}
+  hreflang={hreflang}
+>
+  <DetalleEntrada
+    silo={{ label: t.nav[entry.collection], path: SILO_PATHS[entry.collection][lang] }}
+    eyebrow={eyebrow}
+    titulo={data.titulo}
+    nombreCorto={data.nombre_corto}
+    descripcion={data.descripcion}
+    path={entradaHref(entry.collection, entry.id)}
+    imagen={data.imagen_portada}
+    conContenido={conContenido}
+  >
+    <Content />
+
+    {precios && <PreciosSidebar slot="sidebar" nombre={data.nombre_corto} precios={precios} />}
+
+    {
+      destinoRef && (
+        <p slot="relacionados" class="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+          <a
+            href={entradaHref('destinos', destinoRef.id)}
+            class="text-sm font-semibold text-accent underline-offset-4 hover:underline"
+          >
+            {t.detalle.moreAbout(destinoRef.data.nombre_corto)} <span aria-hidden="true">→</span>
+          </a>
+        </p>
+      )
+    }
+
+    {
+      experienciasDelDestino.length > 0 && (
+        <section slot="relacionados" aria-labelledby="experiencias-destino" class="bg-surface py-16">
+          <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <h2 id="experiencias-destino" class="text-3xl font-semibold">
+              {t.detalle.experiencesIn(data.nombre_corto)}
+            </h2>
+            <ul class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {experienciasDelDestino.map((experiencia) => (
+                <li>
+                  <TourCard
+                    experiencia={experiencia}
+                    destinoNombre={data.nombre_corto}
+                    href={entradaHref('experiencias', experiencia.id)}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )
+    }
+  </DetalleEntrada>
+</Layout>

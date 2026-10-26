@@ -1,3 +1,5 @@
+import type { Lang } from '../i18n/rutas';
+
 /**
  * Niveles de precio de un tour/experiencia. Transparencia total: cada
  * costo que pagará el viajero debe estar listado aquí.
@@ -19,8 +21,8 @@ export function precioDesde(niveles: PrecioNivel[]): PrecioNivel | null {
   return estandar.reduce((min, n) => (n.precio < min.precio ? n : min));
 }
 
-export function formatPrecio(nivel: Pick<PrecioNivel, 'precio' | 'moneda'>): string {
-  const monto = new Intl.NumberFormat('es-MX', {
+export function formatPrecio(nivel: Pick<PrecioNivel, 'precio' | 'moneda'>, lang: Lang): string {
+  const monto = new Intl.NumberFormat(lang === 'en' ? 'en-US' : 'es-MX', {
     style: 'currency',
     currency: nivel.moneda,
     maximumFractionDigits: 0,

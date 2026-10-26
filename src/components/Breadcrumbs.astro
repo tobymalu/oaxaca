@@ -1,14 +1,18 @@
 ---
 import { SITE } from '../lib/site';
+import { PAGE_PATHS } from '../i18n/rutas';
+import { getLang, useT } from '../i18n/ui';
 
 export type Crumb = { label: string; href: string };
 
 interface Props {
-  /** Sin incluir "Inicio" — se agrega automáticamente. El último es la página actual. */
+  /** Sin incluir el Home — se agrega automáticamente. El último es la página actual. */
   items: Crumb[];
 }
 
-const crumbs: Crumb[] = [{ label: 'Inicio', href: '/' }, ...Astro.props.items];
+const lang = getLang(Astro.currentLocale);
+const t = useT(lang);
+const crumbs: Crumb[] = [{ label: t.nav.home, href: PAGE_PATHS.home[lang] }, ...Astro.props.items];
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -22,7 +26,7 @@ const jsonLd = {
 };
 ---
 
-<nav aria-label="Migas de pan" class="text-sm text-muted">
+<nav aria-label={t.a11y.breadcrumbs} class="text-sm text-muted">
   <ol class="flex flex-wrap items-center gap-2">
     {
       crumbs.map((c, i) => (

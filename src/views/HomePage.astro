@@ -1,0 +1,39 @@
+---
+// Home de cualquier idioma (el idioma sale de la URL vía Astro.currentLocale).
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import RegionsSection from '../components/RegionsSection.astro';
+import ToursSection from '../components/ToursSection.astro';
+import ServicesSection from '../components/ServicesSection.astro';
+import GuideSection from '../components/GuideSection.astro';
+import { getSilo, destacadosORecientes } from '../lib/colecciones';
+import { PAGE_PATHS } from '../i18n/rutas';
+import { getLang } from '../i18n/ui';
+
+const lang = getLang(Astro.currentLocale);
+
+// Todo se resuelve en build (output static): cero JS de cliente para estas listas.
+const [destinos, experiencias, gastronomia, servicios] = await Promise.all([
+  getSilo('destinos', lang),
+  getSilo('experiencias', lang),
+  getSilo('gastronomia', lang),
+  getSilo('servicios', lang),
+]);
+
+// Destacados primero; si no alcanzan, se completa con los más recientes.
+const destinosHome = destacadosORecientes(destinos, 3);
+const experienciasHome = destacadosORecientes(experiencias, 4);
+const gastronomiaHome = destacadosORecientes(gastronomia, 3);
+const serviciosHome = destacadosORecientes(servicios, 3);
+
+// Etiqueta de región de cada tour (experiencias.destino → destinos.nombre_corto).
+const nombresDestino = Object.fromEntries(destinos.map((d) => [d.id, d.data.nombre_corto]));
+---
+
+<Layout transparentHeader translations={PAGE_PATHS.home}>
+  <Hero />
+  <RegionsSection destinos={destinosHome} />
+  <ToursSection experiencias={experienciasHome} nombresDestino={nombresDestino} />
+  <ServicesSection servicios={serviciosHome} />
+  <GuideSection articulos={gastronomiaHome} />
+</Layout>

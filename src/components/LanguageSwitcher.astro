@@ -1,0 +1,34 @@
+---
+// Enlace al otro idioma: la traducción de la página actual si existe;
+// si no, el Home de ese idioma. Es un <a> normal (cero JS) con hreflang.
+import { PAGE_PATHS, LANGS, type Alternates } from '../i18n/rutas';
+import { getLang, useT } from '../i18n/ui';
+
+interface Props {
+  translations: Alternates;
+  class?: string;
+}
+
+const { translations, class: className } = Astro.props;
+const lang = getLang(Astro.currentLocale);
+const t = useT(lang);
+const otro = LANGS.find((l) => l !== lang) ?? lang;
+const href = translations[otro] ?? PAGE_PATHS.home[otro];
+---
+
+<a
+  href={href}
+  hreflang={otro}
+  aria-label={t.langSwitch.aria}
+  title={t.langSwitch.label}
+  class:list={[
+    'inline-flex items-center gap-1.5 rounded-full border border-current/30 px-3 py-1.5 text-sm font-semibold transition hover:border-current',
+    className,
+  ]}
+>
+  <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+    <circle cx="12" cy="12" r="9"></circle>
+    <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"></path>
+  </svg>
+  {t.langSwitch.short}
+</a>

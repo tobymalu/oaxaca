@@ -1,13 +1,9 @@
 ---
-import {
-  SITE,
-  LEGAL_LINKS,
-  POPULAR_LINKS,
-  PARTNER_LINKS,
-  hasContact,
-  whatsappUrl,
-} from '../lib/site';
+import { SITE, PARTNER_LINKS, hasContact, whatsappUrl } from '../lib/site';
+import { getLang, legalLinks, popularLinks, useT } from '../i18n/ui';
 
+const lang = getLang(Astro.currentLocale);
+const t = useT(lang);
 const year = new Date().getFullYear();
 const newsletterEnabled = Boolean(SITE.newsletterEndpoint);
 ---
@@ -16,7 +12,7 @@ const newsletterEnabled = Boolean(SITE.newsletterEndpoint);
   <div class="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
     <div>
       <p class="font-heading text-xl font-semibold">{SITE.name}</p>
-      <p class="mt-3 text-sm text-background/70">{SITE.tagline}</p>
+      <p class="mt-3 text-sm text-background/70">{t.meta.tagline}</p>
 
       {
         hasContact && (
@@ -37,7 +33,12 @@ const newsletterEnabled = Boolean(SITE.newsletterEndpoint);
             )}
             {SITE.whatsapp.number && (
               <li>
-                <a href={whatsappUrl()} class="transition hover:text-primary" rel="noopener" target="_blank">
+                <a
+                  href={whatsappUrl(t.whatsappMessages.default)}
+                  class="transition hover:text-primary"
+                  rel="noopener"
+                  target="_blank"
+                >
                   WhatsApp
                 </a>
               </li>
@@ -49,11 +50,11 @@ const newsletterEnabled = Boolean(SITE.newsletterEndpoint);
 
     <nav aria-labelledby="footer-categorias">
       <h2 id="footer-categorias" class="text-sm font-semibold uppercase tracking-wide text-background/60">
-        Categorías populares
+        {t.footer.popular}
       </h2>
       <ul class="mt-4 space-y-2 text-sm">
         {
-          POPULAR_LINKS.map((link) => (
+          popularLinks(lang).map((link) => (
             <li>
               <a href={link.href} class="transition hover:text-primary">
                 {link.label}
@@ -65,10 +66,12 @@ const newsletterEnabled = Boolean(SITE.newsletterEndpoint);
     </nav>
 
     <nav aria-labelledby="footer-legal">
-      <h2 id="footer-legal" class="text-sm font-semibold uppercase tracking-wide text-background/60">Legal</h2>
+      <h2 id="footer-legal" class="text-sm font-semibold uppercase tracking-wide text-background/60">
+        {t.footer.legal}
+      </h2>
       <ul class="mt-4 space-y-2 text-sm">
         {
-          LEGAL_LINKS.map((link) => (
+          legalLinks(lang).map((link) => (
             <li>
               <a href={link.href} class="transition hover:text-primary">
                 {link.label}
@@ -78,7 +81,7 @@ const newsletterEnabled = Boolean(SITE.newsletterEndpoint);
         }
       </ul>
 
-      <h2 class="mt-8 text-sm font-semibold uppercase tracking-wide text-background/60">Socios comerciales</h2>
+      <h2 class="mt-8 text-sm font-semibold uppercase tracking-wide text-background/60">{t.footer.partners}</h2>
       <ul class="mt-4 space-y-2 text-sm">
         {
           PARTNER_LINKS.map((link) => (
@@ -93,19 +96,17 @@ const newsletterEnabled = Boolean(SITE.newsletterEndpoint);
     </nav>
 
     <div>
-      <h2 class="text-sm font-semibold uppercase tracking-wide text-background/60">Newsletter</h2>
-      <p class="mt-4 text-sm text-background/70">
-        Fechas de festividades, nuevas experiencias y guías locales, directo a tu correo.
-      </p>
+      <h2 class="text-sm font-semibold uppercase tracking-wide text-background/60">{t.footer.newsletter}</h2>
+      <p class="mt-4 text-sm text-background/70">{t.footer.newsletterText}</p>
       <form action={SITE.newsletterEndpoint || undefined} method="post" class="mt-4 flex flex-col gap-2">
-        <label for="newsletter-email" class="sr-only">Correo electrónico</label>
+        <label for="newsletter-email" class="sr-only">{t.footer.emailLabel}</label>
         <input
           id="newsletter-email"
           name="email"
           type="email"
           required
           autocomplete="email"
-          placeholder="tu@correo.com"
+          placeholder={t.footer.emailPlaceholder}
           disabled={!newsletterEnabled}
           class="w-full rounded-lg border border-background/20 bg-background/10 px-4 py-2.5 text-sm text-background placeholder:text-background/50 focus:border-primary focus:outline-none disabled:opacity-60"
         />
@@ -114,20 +115,16 @@ const newsletterEnabled = Boolean(SITE.newsletterEndpoint);
           disabled={!newsletterEnabled}
           class="rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          Suscribirme
+          {t.footer.subscribe}
         </button>
-        {
-          !newsletterEnabled && (
-            <p class="text-xs text-background/60">[DATO FALTANTE]: proveedor de newsletter.</p>
-          )
-        }
+        {!newsletterEnabled && <p class="text-xs text-background/60">{t.footer.newsletterMissing}</p>}
       </form>
     </div>
   </div>
 
   <div class="border-t border-background/10">
     <p class="mx-auto max-w-7xl px-4 py-5 text-xs text-background/60 sm:px-6 lg:px-8">
-      © {year} {SITE.name}. Todos los derechos reservados.
+      © {year} {SITE.name}. {t.footer.rights}
     </p>
   </div>
 </footer>

@@ -3,22 +3,26 @@ import type { CollectionEntry } from 'astro:content';
 import ArticuloCard from './ArticuloCard.astro';
 import SectionHeader from './SectionHeader.astro';
 import { entradaHref } from '../lib/colecciones';
+import { SILO_PATHS } from '../i18n/rutas';
+import { getLang, useT } from '../i18n/ui';
 
 interface Props {
   articulos: CollectionEntry<'gastronomia'>[];
 }
 
 const { articulos } = Astro.props;
+const lang = getLang(Astro.currentLocale);
+const t = useT(lang);
 ---
 
 <section id="guia" aria-labelledby="guia-titulo" class="bg-surface py-20">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <SectionHeader
       id="guia-titulo"
-      eyebrow="Gastronomía"
-      title="Guía Local: Lo que debes saber"
-      hubHref="/gastronomia"
-      hubLabel="Ver la guía gastronómica"
+      eyebrow={t.home.guia.eyebrow}
+      title={t.home.guia.title}
+      hubHref={SILO_PATHS.gastronomia[lang]}
+      hubLabel={t.home.guia.hub}
     />
 
     <ul class="mt-10 grid gap-6 md:grid-cols-3">

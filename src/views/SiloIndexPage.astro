@@ -1,0 +1,75 @@
+---
+// Página índice (hub) de un silo, en el idioma de la URL.
+import Layout from '../layouts/Layout.astro';
+import CategoryHeader from '../components/CategoryHeader.astro';
+import DestinoCard from '../components/DestinoCard.astro';
+import TourCard from '../components/TourCard.astro';
+import ArticuloCard from '../components/ArticuloCard.astro';
+import ServicioCard from '../components/ServicioCard.astro';
+import EmptySilo from '../components/EmptySilo.astro';
+import { entradaHref, getSilo } from '../lib/colecciones';
+import { SILO_PATHS, type Silo } from '../i18n/rutas';
+import { getLang, useT } from '../i18n/ui';
+
+interface Props {
+  silo: Silo;
+}
+
+const { silo } = Astro.props;
+const lang = getLang(Astro.currentLocale);
+const t = useT(lang);
+const textos = t.silos[silo];
+const path = SILO_PATHS[silo][lang];
+
+const [destinos, experiencias, gastronomia, servicios] = await Promise.all([
+  // Destinos también se necesitan para la etiqueta de región de los tours.
+  silo === 'destinos' || silo === 'experiencias' ? getSilo('destinos', lang) : [],
+  silo === 'experiencias' ? getSilo('experiencias', lang) : [],
+  silo === 'gastronomia' ? getSilo('gastronomia', lang) : [],
+  silo === 'servicios' ? getSilo('servicios', lang) : [],
+]);
+const nombresDestino = Object.fromEntries(destinos.map((d) => [d.id, d.data.nombre_corto]));
+const total = { destinos, experiencias, gastronomia, servicios }[silo].length;
+const gridCols = silo === 'experiencias' ? 'lg:grid-cols-4' : 'lg:grid-cols-3';
+---
+
+<Layout title={textos.title} description={textos.description} translations={SILO_PATHS[silo]}>
+  <CategoryHeader breadcrumb={t.nav[silo]} path={path} eyebrow={textos.eyebrow} h1={textos.h1} intro={textos.intro} />
+
+  <section aria-label={textos.listLabel} class="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
+    {
+      total === 0 ? (
+        <EmptySilo />
+      ) : (
+        <ul class:list={['grid gap-6 sm:grid-cols-2', gridCols]}>
+          {silo === 'destinos' &&
+            destinos.map((destino) => (
+              <li>
+                <DestinoCard destino={destino} href={entradaHref('destinos', destino.id)} headingLevel="h2" />
+              </li>
+            ))}
+          {experiencias.map((experiencia) => (
+            <li>
+              <TourCard
+                experiencia={experiencia}
+                destinoNombre={nombresDestino[experiencia.data.destino.id] ?? ''}
+                href={entradaHref('experiencias', experiencia.id)}
+                headingLevel="h2"
+              />
+            </li>
+          ))}
+          {gastronomia.map((articulo) => (
+            <li>
+              <ArticuloCard articulo={articulo} href={entradaHref('gastronomia', articulo.id)} headingLevel="h2" />
+            </li>
+          ))}
+          {servicios.map((servicio) => (
+            <li>
+              <ServicioCard servicio={servicio} href={entradaHref('servicios', servicio.id)} headingLevel="h2" />
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </section>
+</Layout>

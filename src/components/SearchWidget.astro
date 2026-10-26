@@ -1,11 +1,13 @@
 ---
 // Widget de búsqueda tipo OTA. Pestañas con radios nativos (cero JS):
-// el valor viaja como `tipo` en el GET a /buscar.
-const TABS = [
-  { value: 'tours', label: 'Tours' },
-  { value: 'hospedaje', label: 'Hospedaje' },
-  { value: 'traslados', label: 'Traslados' },
-];
+// el valor viaja como `tipo` en el GET a la página de búsqueda del idioma.
+import { PAGE_PATHS } from '../i18n/rutas';
+import { getLang, useT } from '../i18n/ui';
+
+const lang = getLang(Astro.currentLocale);
+const t = useT(lang);
+
+const TABS = (['tours', 'hospedaje', 'traslados'] as const).map((value) => ({ value, label: t.search.tabs[value] }));
 
 const SUGERENCIAS = [
   'Oaxaca de Juárez',
@@ -22,12 +24,12 @@ const SUGERENCIAS = [
 
 <form
   id="planear"
-  action="/buscar"
+  action={PAGE_PATHS.buscar[lang]}
   method="get"
   class="w-full max-w-4xl rounded-2xl bg-background p-4 text-left text-foreground shadow-2xl sm:p-6"
 >
   <fieldset>
-    <legend class="sr-only">¿Qué estás buscando?</legend>
+    <legend class="sr-only">{t.search.legend}</legend>
     <div class="flex gap-2">
       {
         TABS.map((tab, i) => (
@@ -45,14 +47,14 @@ const SUGERENCIAS = [
   <div class="mt-4 grid gap-3 md:grid-cols-[2fr_1fr_1fr_auto] md:items-end">
     <div>
       <label for="buscar-q" class="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted">
-        Destino o actividad
+        {t.search.query}
       </label>
       <input
         id="buscar-q"
         name="q"
         type="search"
         list="buscar-sugerencias"
-        placeholder="Ej. Hierve el Agua"
+        placeholder={t.search.placeholder}
         autocomplete="off"
         class="w-full rounded-lg border border-foreground/15 bg-background px-4 py-3 text-base placeholder:text-muted/70 focus:border-primary focus:ring-2 focus:ring-primary/40 focus:outline-none"
       />
@@ -63,7 +65,7 @@ const SUGERENCIAS = [
 
     <div>
       <label for="buscar-llegada" class="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted">
-        Llegada
+        {t.search.arrival}
       </label>
       <input
         id="buscar-llegada"
@@ -75,7 +77,7 @@ const SUGERENCIAS = [
 
     <div>
       <label for="buscar-salida" class="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted">
-        Salida
+        {t.search.departure}
       </label>
       <input
         id="buscar-salida"
@@ -89,7 +91,7 @@ const SUGERENCIAS = [
       type="submit"
       class="rounded-lg bg-primary px-8 py-3 text-base font-semibold text-primary-foreground shadow-sm transition hover:brightness-95 focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:outline-none"
     >
-      Buscar
+      {t.search.submit}
     </button>
   </div>
 </form>
