@@ -1,0 +1,16 @@
+---
+import type { InferGetStaticPropsType } from 'astro';
+import EntradaPage from '../../../views/EntradaPage.astro';
+import { getEntradas, slugDe } from '../../../lib/colecciones';
+
+export async function getStaticPaths() {
+  const entradas = await getEntradas('gastronomia', 'en');
+  return entradas.map((entry) => ({ params: { slug: slugDe(entry) }, props: { entry } }));
+}
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { entry } = Astro.props;
+---
+
+<EntradaPage entry={entry} />
