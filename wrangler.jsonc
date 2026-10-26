@@ -1,7 +1,13 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "visitaoaxaca",
-  "compatibility_date": "2026-10-24",
-  // Sitio 100% estático: sin bindings de Images/KV ni adapter.
-  "pages_build_output_dir": "./dist"
+  // Debe coincidir exactamente con el nombre del Worker en el dashboard de Cloudflare.
+  "name": "oaxaca",
+  "compatibility_date": "2026-10-26",
+  // Sitio 100% estático (Workers Builds): sin `main`, adapter ni bindings.
+  // Build command: npm run build · Deploy command: npx wrangler deploy
+  "assets": {
+    "directory": "./dist",
+    // Rutas inexistentes devuelven dist/404.html con status 404.
+    "not_found_handling": "404-page"
+  }
 }
