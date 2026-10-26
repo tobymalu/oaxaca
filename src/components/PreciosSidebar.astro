@@ -1,0 +1,80 @@
+---
+// Bloque lateral de precios (experiencias y servicios). Transparencia total:
+// se lista cada nivel; los addons van aparte y no entran al "Desde $X".
+import { SITE, planTripHref } from '../lib/site';
+import { precioDesde, formatPrecio, type PrecioNivel } from '../lib/precios';
+
+interface Props {
+  nombre: string;
+  precios: PrecioNivel[];
+}
+
+const { nombre, precios } = Astro.props;
+const desde = precioDesde(precios);
+const estandar = precios.filter((p) => p.tipo === 'estandar');
+const addons = precios.filter((p) => p.tipo === 'addon');
+
+const ctaHref = planTripHref(`Hola, me interesa "${nombre}". ¿Me pueden dar disponibilidad?`);
+const ctaExternal = ctaHref.startsWith('http');
+const ctaLabel = SITE.whatsapp.number ? 'Reservar por WhatsApp' : 'Solicitar cotización';
+---
+
+<aside aria-labelledby="precios-titulo" class="rounded-2xl border border-foreground/10 bg-background p-6 shadow-lg lg:sticky lg:top-24">
+  <h2 id="precios-titulo" class="text-sm font-semibold uppercase tracking-wide text-muted">Precio</h2>
+  <p class="mt-1 text-sm text-muted">
+    Desde
+    <span class="block font-heading text-3xl font-semibold text-foreground">
+      {desde ? formatPrecio(desde) : '[DATO FALTANTE]'}
+    </span>
+  </p>
+
+  {
+    estandar.length > 0 && (
+      <dl class="mt-6 divide-y divide-foreground/10 border-t border-foreground/10 text-sm">
+        {estandar.map((nivel) => (
+          <div class="flex items-start justify-between gap-4 py-3">
+            <dt>
+              {nivel.etiqueta}
+              {nivel.nota && <span class="block text-xs text-muted">{nivel.nota}</span>}
+            </dt>
+            <dd class="font-semibold whitespace-nowrap">{formatPrecio(nivel)}</dd>
+          </div>
+        ))}
+      </dl>
+    )
+  }
+
+  {
+    addons.length > 0 && (
+      <>
+        <h3 class="mt-6 text-sm font-semibold uppercase tracking-wide text-muted">Extras opcionales</h3>
+        <dl class="mt-2 divide-y divide-foreground/10 border-t border-foreground/10 text-sm">
+          {addons.map((nivel) => (
+            <div class="flex items-start justify-between gap-4 py-3">
+              <dt>
+                {nivel.etiqueta}
+                {nivel.nota && <span class="block text-xs text-muted">{nivel.nota}</span>}
+              </dt>
+              <dd class="font-semibold whitespace-nowrap">+{formatPrecio(nivel)}</dd>
+            </div>
+          ))}
+        </dl>
+      </>
+    )
+  }
+
+  <p class="mt-6 flex items-center gap-2 text-sm text-muted">
+    <svg class="size-4 shrink-0 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M5 12.5l4.5 4.5L19 7"></path>
+    </svg>
+    Precio final, sin costos ocultos.
+  </p>
+
+  <a
+    href={ctaHref}
+    class="mt-6 block rounded-full bg-primary px-6 py-3.5 text-center font-semibold text-primary-foreground shadow-sm transition hover:brightness-95"
+    {...ctaExternal && { target: '_blank', rel: 'noopener' }}
+  >
+    {ctaLabel}
+  </a>
+</aside>

@@ -40,6 +40,30 @@
 }
 
 /*
+ * Tema de @tailwindcss/typography con la paleta de marca. Se usa junto a
+ * `prose`: <article class="prose prose-oaxaca">.
+ */
+@utility prose-oaxaca {
+  --tw-prose-body: var(--color-foreground);
+  --tw-prose-headings: var(--color-foreground);
+  --tw-prose-lead: var(--color-muted);
+  --tw-prose-links: var(--color-accent);
+  --tw-prose-bold: var(--color-foreground);
+  --tw-prose-counters: var(--color-muted);
+  --tw-prose-bullets: var(--color-primary);
+  --tw-prose-hr: color-mix(in srgb, var(--color-foreground) 15%, transparent);
+  --tw-prose-quotes: var(--color-foreground);
+  --tw-prose-quote-borders: var(--color-primary);
+  --tw-prose-captions: var(--color-muted);
+  --tw-prose-kbd: var(--color-foreground);
+  --tw-prose-code: var(--color-foreground);
+  --tw-prose-pre-code: var(--color-background);
+  --tw-prose-pre-bg: var(--color-foreground);
+  --tw-prose-th-borders: color-mix(in srgb, var(--color-foreground) 25%, transparent);
+  --tw-prose-td-borders: color-mix(in srgb, var(--color-foreground) 10%, transparent);
+}
+
+/*
  * Greca zapoteca (Mitla) en SVG inline — sin peticiones extra ni imágenes
  * pesadas. Opacidad 5% para no afectar la legibilidad.
  */

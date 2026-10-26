@@ -1,0 +1,60 @@
+---
+import { getCollection, getEntry, render, type CollectionEntry } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import DetalleEntrada from '../../components/DetalleEntrada.astro';
+import PreciosSidebar from '../../components/PreciosSidebar.astro';
+import { SILOS, entradaHref, tieneContenido } from '../../lib/colecciones';
+import { ogImageDe } from '../../lib/og';
+
+export async function getStaticPaths() {
+  const entradas = await getCollection('experiencias');
+  return entradas.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+interface Props {
+  entry: CollectionEntry<'experiencias'>;
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+const { Content } = await render(entry);
+const destino = await getEntry(data.destino);
+const conContenido = tieneContenido(entry);
+const ogImage = await ogImageDe(data.imagen_portada);
+---
+
+<Layout
+  title={data.seo.meta_title}
+  description={data.seo.meta_description}
+  noindex={data.seo.noindex || !conContenido}
+  ogImage={ogImage}
+  ogType="article"
+>
+  <DetalleEntrada
+    silo={SILOS.experiencias}
+    eyebrow={destino ? `Experiencia · ${destino.data.nombre_corto}` : 'Experiencia'}
+    titulo={data.titulo}
+    nombreCorto={data.nombre_corto}
+    descripcion={data.descripcion}
+    path={entradaHref('experiencias', entry.id)}
+    imagen={data.imagen_portada}
+    conContenido={conContenido}
+  >
+    <Content />
+
+    <PreciosSidebar slot="sidebar" nombre={data.nombre_corto} precios={data.precios} />
+
+    {
+      destino && (
+        <p slot="relacionados" class="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+          <a
+            href={entradaHref('destinos', destino.id)}
+            class="text-sm font-semibold text-accent underline-offset-4 hover:underline"
+          >
+            Más sobre {destino.data.nombre_corto} <span aria-hidden="true">→</span>
+          </a>
+        </p>
+      )
+    }
+  </DetalleEntrada>
+</Layout>

@@ -1,0 +1,46 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import DetalleEntrada from '../../components/DetalleEntrada.astro';
+import PreciosSidebar from '../../components/PreciosSidebar.astro';
+import { SILOS, entradaHref, tieneContenido } from '../../lib/colecciones';
+import { ogImageDe } from '../../lib/og';
+
+export async function getStaticPaths() {
+  const entradas = await getCollection('servicios');
+  return entradas.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+interface Props {
+  entry: CollectionEntry<'servicios'>;
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+const { Content } = await render(entry);
+const conContenido = tieneContenido(entry);
+const ogImage = await ogImageDe(data.imagen_portada);
+---
+
+<Layout
+  title={data.seo.meta_title}
+  description={data.seo.meta_description}
+  noindex={data.seo.noindex || !conContenido}
+  ogImage={ogImage}
+  ogType="article"
+>
+  <DetalleEntrada
+    silo={SILOS.servicios}
+    eyebrow="Servicio premium"
+    titulo={data.titulo}
+    nombreCorto={data.nombre_corto}
+    descripcion={data.descripcion}
+    path={entradaHref('servicios', entry.id)}
+    imagen={data.imagen_portada}
+    conContenido={conContenido}
+  >
+    <Content />
+
+    <PreciosSidebar slot="sidebar" nombre={data.nombre_corto} precios={data.precios} />
+  </DetalleEntrada>
+</Layout>

@@ -1,5 +1,27 @@
 import { getCollection, type CollectionEntry, type CollectionKey } from 'astro:content';
 
+/** Etiqueta de UI y ruta del hub de cada silo. */
+export const SILOS = {
+  destinos: { label: 'Destinos', path: '/destinos' },
+  experiencias: { label: 'Experiencias', path: '/experiencias' },
+  gastronomia: { label: 'Gastronomía', path: '/gastronomia' },
+  servicios: { label: 'Servicios', path: '/servicios' },
+} as const satisfies Record<CollectionKey, { label: string; path: string }>;
+
+/** URL pública de una entrada: /<silo>/<id>. */
+export function entradaHref(coleccion: CollectionKey, id: string): string {
+  return `${SILOS[coleccion].path}/${id}`;
+}
+
+/**
+ * true si el .mdx tiene cuerpo real (ignora comentarios MDX como el
+ * placeholder [DATO FALTANTE]). Misma regla que `rutasSinContenido()` en
+ * astro.config.mjs — si se cambia aquí, cambiarla allá.
+ */
+export function tieneContenido(entry: { body?: string }): boolean {
+  return Boolean(entry.body?.replace(/\{\/\*[\s\S]*?\*\/\}/g, '').trim());
+}
+
 /**
  * Entradas publicables de un silo (sin noindex), de la más reciente a la
  * más antigua. Con la misma fecha desempata `orden` (sin orden van al final).
