@@ -1,0 +1,34 @@
+---
+// Reemplaza el <img> de las imágenes Markdown (`![alt](./foto.jpg)`) dentro
+// del cuerpo MDX: versiones responsivas en WebP en lugar de la foto a
+// tamaño completo. Las imágenes locales llegan como ImageMetadata; las
+// remotas (string) se pintan tal cual.
+import { Image } from 'astro:assets';
+
+interface Props {
+  src: ImageMetadata | string;
+  alt: string;
+  title?: string;
+}
+
+const { src, alt, title } = Astro.props;
+const clase = 'w-full rounded-2xl object-cover shadow-md';
+---
+
+{
+  typeof src === 'string' ? (
+    <img src={src} alt={alt} title={title} loading="lazy" decoding="async" class={clase} />
+  ) : (
+    <Image
+      src={src}
+      alt={alt}
+      title={title}
+      width={1200}
+      widths={[480, 800, 1200]}
+      sizes="(min-width: 1024px) 760px, 100vw"
+      format="webp"
+      quality={75}
+      class={clase}
+    />
+  )
+}

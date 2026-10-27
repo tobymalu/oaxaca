@@ -5,6 +5,7 @@ import { getEntry, render, type CollectionEntry } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import DetalleEntrada from '../components/DetalleEntrada.astro';
 import PreciosSidebar from '../components/PreciosSidebar.astro';
+import ArticleImage from '../components/ArticleImage.astro';
 import TourCard from '../components/TourCard.astro';
 import { alternatesDe, entradaHref, getSilo, tieneContenido } from '../lib/colecciones';
 import { ogImageDe } from '../lib/og';
@@ -72,7 +73,7 @@ const precios = entry.collection === 'experiencias' || entry.collection === 'ser
     imagen={data.imagen_portada}
     conContenido={conContenido}
   >
-    <Content />
+    <Content components={{ img: ArticleImage }} />
 
     {precios && <PreciosSidebar slot="sidebar" nombre={data.nombre_corto} precios={precios} />}
 

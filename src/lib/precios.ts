@@ -25,6 +25,8 @@ export function formatPrecio(nivel: Pick<PrecioNivel, 'precio' | 'moneda'>, lang
   const monto = new Intl.NumberFormat(lang === 'en' ? 'en-US' : 'es-MX', {
     style: 'currency',
     currency: nivel.moneda,
+    // "$" a secas (no "MX$"/"US$"): el código de moneda ya va al final.
+    currencyDisplay: 'narrowSymbol',
     maximumFractionDigits: 0,
   }).format(nivel.precio);
   return `${monto} ${nivel.moneda}`;
